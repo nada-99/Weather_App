@@ -2,4 +2,25 @@
     <string name="app_name">Weather App</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="favorites_header">Favorites</string>
+    <string name="add_places_fav">Add Places</string>
+    <string name="alerts_header">Alerts</string>
+    <string name="add_alerts">Add Alerts</string>
+    <string name="setting_header">Setting</string>
+    <string name="location_setting">Location</string>
+    <string name="language_setting">Language</string>
+    <string name="gps">GPS</string>
+    <string name="map">Map</string>
+    <string name="english">English</string>
+    <string name="arabic">Arabic</string>
+    <string name="temperature">Temperature</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="celsius">Celsius</string>
+    <string name="kelvin">Kelvin</string>
+    <string name="fahrenheit">Fahrenheit</string>
+    <string name="meter_sec">Meter / Sec</string>
+    <string name="mile_hour">Mile / Hour</string>
+    <string name="notifications">Notifications</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
 </resources>
