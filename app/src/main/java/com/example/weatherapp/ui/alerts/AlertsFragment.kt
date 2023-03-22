@@ -9,8 +9,6 @@ import androidx.fragment.app.Fragment
 import com.example.weatherapp.R
 
 class AlertsFragment : Fragment() {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
