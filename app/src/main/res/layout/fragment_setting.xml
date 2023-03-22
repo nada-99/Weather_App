@@ -1,14 +1,311 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.SettingFragment">
+    android:background="@drawable/setting_background"
+    tools:context=".ui.setting.SettingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/notification_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/radius_radio_group"
+        android:elevation="10dp"
+        android:fontFamily="@font/capriola"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/notifications"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/temp_setting_tv"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/temp_setting_tv"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/wind_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/radius_radio_group"
+        android:fontFamily="@font/capriola"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/wind_speed"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/temp_setting_tv"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup2" />
+
+    <TextView
+        android:id="@+id/temp_setting_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/radius_radio_group"
+        android:elevation="10dp"
+        android:fontFamily="@font/capriola"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/temperature"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/wind_tv"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup1" />
+
+    <TextView
+        android:id="@+id/setting_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/capriola"
+        android:text="@string/setting_header"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/back_setting"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/back_icon_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/setting_tv" />
+
+    <TextView
+        android:id="@+id/location_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/radius_radio_group"
+        android:elevation="10dp"
+        android:fontFamily="@font/capriola"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/location_setting"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/language_tv"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_tv" />
+
+    <TextView
+        android:id="@+id/language_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/radius_radio_group"
+        android:fontFamily="@font/capriola"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/language_setting"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/location_tv"
+        app:layout_constraintTop_toTopOf="@+id/location_tv" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/radius_radio_group"
+        android:checkedButton="@+id/radio_button_1"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/location_tv"
+        app:layout_constraintStart_toStartOf="@+id/location_tv"
+        app:layout_constraintTop_toBottomOf="@+id/location_tv">
+
+        <RadioButton
+            android:id="@+id/gps_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:buttonTint="@color/white"
+            android:fontFamily="@font/capriola"
+            android:text="@string/gps"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/map_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:fontFamily="@font/capriola"
+            android:text="@string/map"
+            android:textColor="@color/white" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/radioGroup2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/radius_radio_group"
+        android:checkedButton="@+id/radio_button_1"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/language_tv"
+        app:layout_constraintStart_toStartOf="@+id/language_tv"
+        app:layout_constraintTop_toBottomOf="@+id/language_tv">
+
+        <RadioButton
+            android:id="@+id/engSub_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:buttonTint="@color/white"
+            android:fontFamily="@font/capriola"
+            android:text="@string/english"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/arSub_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:fontFamily="@font/capriola"
+            android:text="@string/arabic"
+            android:textColor="@color/white" />
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/radius_radio_group"
+        android:checkedButton="@+id/radio_button_1"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/temp_setting_tv"
+        app:layout_constraintStart_toStartOf="@+id/temp_setting_tv"
+        app:layout_constraintTop_toBottomOf="@+id/temp_setting_tv">
+
+        <RadioButton
+            android:id="@+id/celsius_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:buttonTint="@color/white"
+            android:fontFamily="@font/capriola"
+            android:text="@string/celsius"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/kelvin_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:buttonTint="@color/white"
+            android:fontFamily="@font/capriola"
+            android:text="@string/kelvin"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/fahrenheit_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:fontFamily="@font/capriola"
+            android:text="@string/fahrenheit"
+            android:textColor="@color/white" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/radioGroup3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/radius_radio_group"
+        android:checkedButton="@+id/radio_button_1"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/wind_tv"
+        app:layout_constraintStart_toStartOf="@+id/wind_tv"
+        app:layout_constraintTop_toBottomOf="@+id/wind_tv">
+
+        <RadioButton
+            android:id="@+id/meter_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:buttonTint="@color/white"
+            android:fontFamily="@font/capriola"
+            android:text="@string/meter_sec"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/mile_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:fontFamily="@font/capriola"
+            android:text="@string/mile_hour"
+            android:textColor="@color/white" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/radioGroup4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/radius_radio_group"
+        android:checkedButton="@+id/radio_button_1"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/notification_tv"
+        app:layout_constraintStart_toStartOf="@+id/notification_tv"
+        app:layout_constraintTop_toBottomOf="@+id/notification_tv">
+
+        <RadioButton
+            android:id="@+id/enable_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:buttonTint="@color/white"
+            android:fontFamily="@font/capriola"
+            android:text="@string/enable"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/disable_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:fontFamily="@font/capriola"
+            android:text="@string/disable"
+            android:textColor="@color/white" />
+    </RadioGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
