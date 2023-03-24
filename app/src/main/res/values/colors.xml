@@ -10,5 +10,6 @@
     <color name="base">#9FDEF7</color>
     <color name="base_light">#BEEAFC</color>
     <color name="secondary">#83D4ED</color>
+    <color name="cardBackground">#A0DAFF</color>
 
 </resources>

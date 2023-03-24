@@ -4,8 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.weatherapp.databinding.HourlyRowBinding
+import com.example.weatherapp.getIconOfWeather
 import com.example.weatherapp.getTimeHourlyFormat
 import com.example.weatherapp.model.Hourly
 
@@ -26,9 +26,7 @@ class HourlyAdapter(private var hourlyList: List<Hourly>, val context: Context) 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentHour = hourlyList[position]
-        Glide.with(context)
-            .load("@drawable/few_clouds_moon")
-            .into(holder.binding.iconWeatherIv)
+        holder.binding.iconWeatherIv.setImageResource(getIconOfWeather(currentHour.weather.firstOrNull()?.icon))
         holder.binding.dateHourTv.text = getTimeHourlyFormat(currentHour.dt)
         holder.binding.tempHourTv.text = currentHour.temp.toInt().toString()+"°c"
     }

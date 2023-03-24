@@ -2,22 +2,19 @@ package com.example.weatherapp.ui.home.view
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weatherapp.R
+import com.airbnb.lottie.LottieDrawable
 import com.example.weatherapp.database.ConcreteLocalSource
 import com.example.weatherapp.databinding.FragmentHomeBinding
 import com.example.weatherapp.getFormattedDate
+import com.example.weatherapp.getLottiOfWeather
 import com.example.weatherapp.model.Repository
 import com.example.weatherapp.model.WeatherResponse
 import com.example.weatherapp.network.APIState
@@ -25,17 +22,14 @@ import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModel
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModelFactory
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
     lateinit var myFactory: HomeViewModelFactory
     lateinit var viewModel: HomeViewModel
-    lateinit var weatherData: WeatherResponse
     lateinit var hourlyAdapter: HourlyAdapter
+    lateinit var dailyAdapter: DailyAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -56,7 +50,10 @@ class HomeFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.HORIZONTAL, false)
         binding.hourlyRecyclerView.layoutManager = layoutManager
 
-        weatherData = WeatherResponse()
+        //daily Adapter
+        dailyAdapter = DailyAdapter(ArrayList(), requireActivity())
+        val layoutManagerDaily = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
+        binding.dailyRecyclerView.layoutManager = layoutManagerDaily
 
         myFactory = HomeViewModelFactory(
             Repository.getInstance(
@@ -77,12 +74,7 @@ class HomeFragment : Fragment() {
                     }
                     is APIState.Success -> {
                         fitWeatherDataToUi(result.data)
-                        //weatherData = result.data
-//                        binding.cityTv.text = weatherData.timezone
-//                        binding.dateTv.text = getFormattedDate(weatherData.current.dt)
-//                        binding.tempTv.text = weatherData.current.temp.toInt().toString()+"°c"
-//                        binding.weatherDesTv.text = weatherData.current.weather.firstOrNull()?.description ?: ""
-                        Log.i("DATAAAA", "$weatherData")
+//                        Log.i("DATAAAA", "$weatherData")
                     }
                     else -> {
                         Log.i("ERRRRORR", "ERRRRORR: ")
@@ -90,7 +82,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        //fitWeatherDataToUi()
     }
 
     fun fitWeatherDataToUi(weatherDetails: WeatherResponse){
@@ -99,11 +90,18 @@ class HomeFragment : Fragment() {
         binding.dateTv.text = getFormattedDate(weatherDetails.current.dt)
         binding.tempTv.text = weatherDetails.current.temp.toInt().toString()+"°c"
         binding.weatherDesTv.text = weatherDetails.current.weather.firstOrNull()?.description ?: ""
+        binding.weatherDesLotti.setAnimation(getLottiOfWeather(weatherDetails.current.weather.firstOrNull()?.icon))
+        binding.weatherDesLotti.repeatCount = LottieDrawable.INFINITE
 
         //hourly recyclerview
-        hourlyAdapter.setListHours(weatherDetails.hourly)
+        hourlyAdapter.setListHours(weatherDetails.hourly.subList(0, 25))
         hourlyAdapter.notifyDataSetChanged()
         binding.hourlyRecyclerView.adapter = hourlyAdapter
+
+        //Daily recyclerview
+        dailyAdapter.setListDaily(weatherDetails.daily)
+        dailyAdapter.notifyDataSetChanged()
+        binding.dailyRecyclerView.adapter = dailyAdapter
 
         //last part
         binding.pressureTv.text = weatherDetails.current.pressure.toString()
