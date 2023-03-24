@@ -34,10 +34,11 @@
 
         <ImageView
             android:id="@+id/icon_weather_iv"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
-            android:layout_margin="8dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="12dp"
             android:src="@drawable/few_clouds_moon"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/temp_desc_tv"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/date_day_tv"

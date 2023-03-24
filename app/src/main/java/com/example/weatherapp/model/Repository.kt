@@ -1,33 +1,31 @@
 package com.example.weatherapp.model
 
+import android.content.Context
+import com.example.weatherapp.Constants
 import com.example.weatherapp.database.LocalSource
 import com.example.weatherapp.network.RemoteSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class Repository private constructor(
-    var remoteSource: RemoteSource, var localSource: LocalSource) : RepositoryInterface {
+    var remoteSource: RemoteSource, var localSource: LocalSource , var context: Context) : RepositoryInterface {
 
     companion object{
         private var instance : Repository? = null
-        fun getInstance(remoteSource: RemoteSource, localSource: LocalSource) : Repository {
+        fun getInstance(remoteSource: RemoteSource, localSource: LocalSource , context: Context) : Repository {
             return instance?: synchronized(this){
-                val temp = Repository(remoteSource , localSource)
+                val temp = Repository(remoteSource , localSource , context)
                 instance = temp
                 temp
             }
         }
     }
 
-    override suspend fun getWeatherResponseFromApi(
-        latitude: Double,
-        longitude: Double,
-        exclude: String,
-        lang: String,
-        units: String,
-        apiKey: String
-    ): Flow<WeatherResponse> {
-        return flowOf(remoteSource.getWeatherFromApi(latitude, longitude, exclude, lang, units, apiKey))
+    override suspend fun getWeatherResponseFromApi(latitude: Double, longitude: Double): Flow<WeatherResponse> {
+        val sharedPreference = context.getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
+        val lang =  sharedPreference.getString(Constants.language,"")!!
+        val units =  sharedPreference.getString(Constants.unit,"")!!
+        return flowOf(remoteSource.getWeatherFromApi(latitude, longitude, lang, units))
     }
 
 

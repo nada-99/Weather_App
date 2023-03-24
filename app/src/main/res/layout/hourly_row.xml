@@ -27,9 +27,9 @@
         <ImageView
             android:id="@+id/icon_weather_iv"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:src="@drawable/few_clouds_moon"
-            android:layout_marginTop="5dp"/>
+            android:layout_margin="8dp"/>
         <TextView
             android:id="@+id/temp_hour_tv"
             android:layout_width="match_parent"

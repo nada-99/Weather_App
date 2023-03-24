@@ -23,7 +23,7 @@
         app:layout_constraintEnd_toEndOf="@+id/temp_setting_tv"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/temp_setting_tv"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/temperature_radioGroup" />
 
     <TextView
         android:id="@+id/wind_tv"
@@ -42,7 +42,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/temp_setting_tv"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup2" />
+        app:layout_constraintTop_toBottomOf="@+id/language_radioGroup" />
 
     <TextView
         android:id="@+id/temp_setting_tv"
@@ -61,7 +61,7 @@
         app:layout_constraintEnd_toStartOf="@+id/wind_tv"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup1" />
+        app:layout_constraintTop_toBottomOf="@+id/location_radioGroup" />
 
     <TextView
         android:id="@+id/setting_tv"
@@ -123,7 +123,7 @@
         app:layout_constraintTop_toTopOf="@+id/location_tv" />
 
     <RadioGroup
-        android:id="@+id/radioGroup1"
+        android:id="@+id/location_radioGroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -158,7 +158,7 @@
     </RadioGroup>
 
     <RadioGroup
-        android:id="@+id/radioGroup2"
+        android:id="@+id/language_radioGroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -189,12 +189,13 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/arabic"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:checked="true"/>
 
     </RadioGroup>
 
     <RadioGroup
-        android:id="@+id/radioGroup"
+        android:id="@+id/temperature_radioGroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -214,7 +215,8 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/celsius"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:checked="true"/>
 
         <RadioButton
             android:id="@+id/kelvin_radio_button"
@@ -239,7 +241,7 @@
     </RadioGroup>
 
     <RadioGroup
-        android:id="@+id/radioGroup3"
+        android:id="@+id/windSpeed_radioGroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -259,7 +261,8 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/meter_sec"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:checked="true"/>
 
         <RadioButton
             android:id="@+id/mile_radio_button"
@@ -274,7 +277,7 @@
     </RadioGroup>
 
     <RadioGroup
-        android:id="@+id/radioGroup4"
+        android:id="@+id/notification_radioGroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -305,7 +308,8 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/disable"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:checked="true"/>
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

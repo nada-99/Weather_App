@@ -52,13 +52,15 @@ class HomeFragment : Fragment() {
 
         //daily Adapter
         dailyAdapter = DailyAdapter(ArrayList(), requireActivity())
-        val layoutManagerDaily = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
+        val layoutManagerDaily =
+            LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
         binding.dailyRecyclerView.layoutManager = layoutManagerDaily
 
         myFactory = HomeViewModelFactory(
             Repository.getInstance(
                 WeatherClient.getInstance(),
-                ConcreteLocalSource(requireContext())
+                ConcreteLocalSource(requireContext()),
+                requireContext()
             )
         )
         viewModel = ViewModelProvider(this, myFactory).get(HomeViewModel::class.java)
@@ -84,11 +86,11 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun fitWeatherDataToUi(weatherDetails: WeatherResponse){
+    fun fitWeatherDataToUi(weatherDetails: WeatherResponse) {
         //first part
         binding.cityTv.text = weatherDetails.timezone
         binding.dateTv.text = getFormattedDate(weatherDetails.current.dt)
-        binding.tempTv.text = weatherDetails.current.temp.toInt().toString()+"°c"
+        binding.tempTv.text = weatherDetails.current.temp.toInt().toString() + "°c"
         binding.weatherDesTv.text = weatherDetails.current.weather.firstOrNull()?.description ?: ""
         binding.weatherDesLotti.setAnimation(getLottiOfWeather(weatherDetails.current.weather.firstOrNull()?.icon))
         binding.weatherDesLotti.repeatCount = LottieDrawable.INFINITE

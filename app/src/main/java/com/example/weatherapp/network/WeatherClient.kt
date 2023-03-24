@@ -11,12 +11,10 @@ class WeatherClient private constructor() : RemoteSource {
     override suspend fun getWeatherFromApi(
         latitude: Double,
         longitude: Double,
-        exclude: String,
         lang: String,
         units: String,
-        apiKey: String
     ): WeatherResponse {
-        return weatherService.getWeather(latitude,longitude, exclude, lang, units, apiKey)
+        return weatherService.getWeather(latitude,longitude, lang, units)
     }
 
     companion object{

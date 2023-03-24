@@ -7,9 +7,7 @@ interface RemoteSource {
     suspend fun getWeatherFromApi(
         latitude: Double,
         longitude: Double,
-        exclude: String,
         lang: String,
-        units: String,
-        apiKey: String
+        units: String
     ): WeatherResponse
 }
