@@ -1,17 +1,18 @@
 package com.example.weatherapp.ui.setting
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation.findNavController
 import com.example.weatherapp.Constants
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentSettingBinding
-import android.content.Context
-import android.content.SharedPreferences
-import android.widget.RadioButton
 
 class SettingFragment : Fragment() {
 
@@ -51,6 +52,12 @@ class SettingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        checkRadioButton()
+
+        binding.backSetting.setOnClickListener {
+            findNavController(view).navigate(R.id.action_settingFragment_to_homeFragment)
+        }
+
         binding.languageRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             langRadioButton = view.findViewById<View>(checkedId) as RadioButton
             when (langRadioButton.text) {
@@ -89,6 +96,29 @@ class SettingFragment : Fragment() {
             }
 
         }
+    }
+
+    fun checkRadioButton() {
+        val sharedPreference =
+            requireActivity().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
+        var lang = sharedPreference.getString(Constants.language, Constants.Language_Enum.en.toString())
+        var units = sharedPreference.getString(Constants.unit,Constants.Units_Enum.metric.toString())
+        if (lang == Constants.Language_Enum.en.toString()) {
+            binding.languageRadioGroup.check(binding.engSubRadioButton.id)
+        }
+        if (lang == Constants.Language_Enum.ar.toString()) {
+            binding.languageRadioGroup.check(binding.arSubRadioButton.id)
+        }
+        if (units == Constants.Units_Enum.metric.toString()) {
+            binding.temperatureRadioGroup.check(binding.celsiusRadioButton.id)
+        }
+        if (units == Constants.Units_Enum.imperial.toString()) {
+            binding.temperatureRadioGroup.check(binding.fahrenheitRadioButton.id)
+        }
+        if (units == Constants.Units_Enum.standard.toString()) {
+            binding.temperatureRadioGroup.check(binding.kelvinRadioButton.id)
+        }
+
     }
 
 

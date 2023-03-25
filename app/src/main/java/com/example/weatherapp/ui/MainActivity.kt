@@ -42,11 +42,6 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(this, R.id.nav_host_fragment)
         setupWithNavController(navigationView, navController)
 
-        val sharedPreference = applicationContext.getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
-        val lang =  sharedPreference.getString(Constants.language,"")!!
-        val units =  sharedPreference.getString(Constants.unit,"")!!
-        //Log.i("sharedPreference", "$lang + $units")
-        println("$lang + $units")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

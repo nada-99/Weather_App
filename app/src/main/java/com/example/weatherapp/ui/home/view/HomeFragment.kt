@@ -21,6 +21,7 @@ import com.example.weatherapp.network.APIState
 import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModel
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
@@ -65,20 +66,23 @@ class HomeFragment : Fragment() {
         )
         viewModel = ViewModelProvider(this, myFactory).get(HomeViewModel::class.java)
 
+        viewModel.getWeatherData()
+
         lifecycleScope.launch {
-            viewModel.weatherData.collect { result ->
+            viewModel.weatherData.collectLatest { result ->
                 when (result) {
                     is APIState.Loading -> {
                         Log.i("LOADING", "LOADING: ")
 //                        binding.recyclerView.visibility=View.GONE
-//                        binding.progressBar.visibility=View.VISIBLE
-
+                        binding.progressBar.visibility = View.VISIBLE
                     }
                     is APIState.Success -> {
+                        binding.progressBar.visibility = View.GONE
                         fitWeatherDataToUi(result.data)
 //                        Log.i("DATAAAA", "$weatherData")
                     }
                     else -> {
+                        binding.progressBar.visibility = View.GONE
                         Log.i("ERRRRORR", "ERRRRORR: ")
                     }
                 }

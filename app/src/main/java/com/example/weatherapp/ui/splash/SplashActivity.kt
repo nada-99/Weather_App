@@ -27,7 +27,7 @@ class SplashActivity : AppCompatActivity() {
         if (isFirstTime) {
             val editor = sharedPreferences.edit()
             editor.putBoolean(Constants.firstTime, false)
-            editor.putString(Constants.language, Constants.Language_Enum.ar.toString())
+            editor.putString(Constants.language, Constants.Language_Enum.en.toString())
             editor.putString(Constants.unit, Constants.Units_Enum.metric.toString())
             editor.putString(Constants.windSpeed, Constants.WindSpeed_Enum.meter.toString())
             editor.commit()

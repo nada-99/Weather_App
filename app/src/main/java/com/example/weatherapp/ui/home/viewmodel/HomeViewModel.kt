@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 class HomeViewModel(private val repo: RepositoryInterface) : ViewModel() {
 
     private var weatherMutableData = MutableStateFlow<APIState>(APIState.Loading)
-    val weatherData =weatherMutableData
+    val weatherData = weatherMutableData
+
     init {
         getWeatherData()
     }
@@ -22,10 +23,12 @@ class HomeViewModel(private val repo: RepositoryInterface) : ViewModel() {
     fun getWeatherData() {
 
         viewModelScope.launch(Dispatchers.IO) {
-            repo.getWeatherResponseFromApi(31.2497, 30.0626).catch {
-                    e->weatherMutableData.value=APIState.Failure(e) }?.collect{
-                    data->weatherMutableData.value=APIState.Success(data)
-            }
+            repo.getWeatherResponseFromApi(31.2497, 30.0626)
+                .catch {
+                        e -> weatherMutableData.value = APIState.Failure(e)
+                }?.collect {
+                        data -> weatherMutableData.value = APIState.Success(data)
+                }
         }
     }
 }

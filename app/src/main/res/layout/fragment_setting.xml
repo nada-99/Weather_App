@@ -189,8 +189,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/arabic"
-            android:textColor="@color/white"
-            android:checked="true"/>
+            android:textColor="@color/white" />
 
     </RadioGroup>
 
@@ -215,8 +214,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/celsius"
-            android:textColor="@color/white"
-            android:checked="true"/>
+            android:textColor="@color/white"/>
 
         <RadioButton
             android:id="@+id/kelvin_radio_button"
@@ -261,8 +259,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/meter_sec"
-            android:textColor="@color/white"
-            android:checked="true"/>
+            android:textColor="@color/white"/>
 
         <RadioButton
             android:id="@+id/mile_radio_button"
@@ -308,8 +305,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/disable"
-            android:textColor="@color/white"
-            android:checked="true"/>
+            android:textColor="@color/white"/>
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
