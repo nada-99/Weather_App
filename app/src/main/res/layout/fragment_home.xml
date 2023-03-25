@@ -9,7 +9,20 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".ui.home.view.HomeFragment">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:layout_marginTop="8dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/location_iv"
@@ -18,17 +31,19 @@
         android:src="@drawable/location_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
     <TextView
         android:id="@+id/city_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:fontFamily="@font/capriola"
-        android:text="Faisal , Giza"
         android:textColor="@color/white"
-        android:textSize="28sp"
+        android:textSize="24sp"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/location_iv" />
@@ -71,18 +86,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date_tv"
         app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/clearsky_night" />
+        app:lottie_loop="true" />
 
     <TextView
         android:id="@+id/weather_des_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:fontFamily="@font/capriola"
         android:text="Clear Sky"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/temp_tv"
         app:layout_constraintTop_toBottomOf="@+id/temp_tv" />
 
@@ -107,8 +123,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/capriola"
         android:text="Next 7 Days"
-        android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hourly_recyclerView" />
 
@@ -128,8 +143,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/capriola"
         android:text="Weather Details"
-        android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/daily_recyclerView" />
 

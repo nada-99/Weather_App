@@ -1,18 +1,21 @@
 package com.example.weatherapp.ui
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
+import com.example.weatherapp.Constants
 import com.example.weatherapp.R
-import com.example.weatherapp.ui.splash.SplashActivity
 import com.google.android.material.navigation.NavigationView
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //setup navigation drawer
         getSupportActionBar()?.setElevation(0F)
         getSupportActionBar()?.setDisplayShowTitleEnabled(false)
 
@@ -37,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(this, R.id.nav_host_fragment)
         setupWithNavController(navigationView, navController)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
