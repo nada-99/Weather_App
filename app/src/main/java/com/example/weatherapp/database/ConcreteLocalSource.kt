@@ -16,7 +16,11 @@ class ConcreteLocalSource (context: Context) : LocalSource {
     }
 
     override suspend fun insertCurrentWeather(weatherResponse: WeatherResponse) {
-        weatherDao.insertCurrentWeather(weatherResponse)
+        return weatherDao.insertCurrentWeather(weatherResponse)
+    }
+
+    override suspend fun deleteCurrentWeather() {
+        return weatherDao.deleteCurrentWeather()
     }
 
 }

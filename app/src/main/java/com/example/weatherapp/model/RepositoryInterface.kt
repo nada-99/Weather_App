@@ -8,4 +8,5 @@ interface RepositoryInterface {
     suspend fun getWeatherResponseFromApi(latitude: Double, longitude: Double): Flow<WeatherResponse>
     suspend fun getCurrentWeatherFromDB() : Flow<WeatherResponse>
     suspend fun insertCurrentWeatherToDB(weatherResponse: WeatherResponse)
+    suspend fun deleteCurrentWeatherToDB()
 }

@@ -98,6 +98,7 @@ class HomeFragment : Fragment() {
                     is APIState.Success -> {
                         binding.progressBar.visibility = View.GONE
                         fitWeatherDataToUi(result.data)
+                        //viewModel.deleteCurrentWeatherToDB()
                         viewModel.insertCurrentWeatherToDB(result.data)
                         Log.i("DATAAAA", "${result.data.current.temp}")
                     }

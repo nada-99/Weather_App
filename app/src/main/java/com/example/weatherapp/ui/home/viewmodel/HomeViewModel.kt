@@ -51,4 +51,11 @@ class HomeViewModel(private val repo: RepositoryInterface) : ViewModel() {
             //getCurrentWeather()
         }
     }
+
+    fun deleteCurrentWeatherToDB(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.deleteCurrentWeatherToDB()
+            //getCurrentWeather()
+        }
+    }
 }

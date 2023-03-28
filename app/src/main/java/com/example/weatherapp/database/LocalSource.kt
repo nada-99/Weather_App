@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface LocalSource {
     fun getCurrentWeather() : Flow<WeatherResponse>
     suspend fun insertCurrentWeather(weatherResponse: WeatherResponse)
+    suspend fun deleteCurrentWeather()
 }

@@ -36,5 +36,9 @@ class Repository private constructor(
         return localSource.insertCurrentWeather(weatherResponse)
     }
 
+    override suspend fun deleteCurrentWeatherToDB() {
+        return localSource.deleteCurrentWeather()
+    }
+
 
 }
