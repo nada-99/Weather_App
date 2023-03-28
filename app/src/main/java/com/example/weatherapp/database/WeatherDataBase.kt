@@ -4,24 +4,26 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.weatherapp.model.Current
+import androidx.room.TypeConverters
+import com.example.weatherapp.model.WeatherResponse
+import com.example.weatherapp.model.WeatherTypeConverter
 
-//@Database(entities = arrayOf(Current::class), version = 1 )
-abstract class WeatherDataBase {
-//    : RoomDatabase() {
-//    abstract fun getWeatherDao(): WeatherDao
-//    companion object {
-//        @Volatile
-//        private var INSTANCE: WeatherDataBase? = null
-//        fun getInstance(ctx: Context): WeatherDataBase {
-//            return INSTANCE ?: synchronized(this) {
-//                val instance = Room.databaseBuilder(
-//                    ctx.applicationContext, WeatherDataBase::class.java, "weather_database")
-//                    .build()
-//
-//                INSTANCE = instance
-//                instance
-//            }
-//        }
-//    }
+@Database(entities = arrayOf(WeatherResponse::class), exportSchema = false, version = 3 )
+@TypeConverters(WeatherTypeConverter::class)
+abstract class WeatherDataBase : RoomDatabase() {
+    abstract fun getWeatherDao(): WeatherDao
+    companion object {
+        @Volatile
+        private var INSTANCE: WeatherDataBase? = null
+        fun getInstance(ctx: Context): WeatherDataBase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    ctx.applicationContext, WeatherDataBase::class.java, "weather_database")
+                    .build()
+
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
 }

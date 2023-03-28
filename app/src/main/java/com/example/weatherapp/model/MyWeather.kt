@@ -2,7 +2,13 @@ package com.example.weatherapp.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
+@Entity(tableName = "weatherResponse",primaryKeys = ["isFav","lat","lon"])
+@TypeConverters(WeatherTypeConverter::class)
 data class WeatherResponse(
     val lat: Double,
     val lon: Double,
@@ -11,10 +17,10 @@ data class WeatherResponse(
     val current: Current,
     val hourly: List<Hourly>,
     val daily: List<Daily>,
-    val alerts: List<Alert>
+    val alerts: List<Alert>,
+    val isFav:Int =0
 ) {
     constructor() : this(0.0, 0.0, "", 0, Current(), listOf(), listOf(), listOf())
-
 }
 data class Current(
     val dt: Long,
@@ -34,7 +40,6 @@ data class Current(
     val weather: List<Weather>
 ) {
     constructor() : this(0, 0, 0, 0.0, 0.0, 0, 0, 0.0, 0.0, 0, 0, 0.0, 0, null, listOf())
-
 }
 
 
@@ -112,5 +117,48 @@ data class Weather(
     val description: String,
     val icon: String
 )
+
+class WeatherTypeConverter {
+    @TypeConverter
+    fun fromWeatherResponseToString(weatherResponse: WeatherResponse) = Gson().toJson(weatherResponse)
+    @TypeConverter
+    fun fromStringToWeatherResponse(weatherString : String) = Gson().fromJson(weatherString, WeatherResponse::class.java)
+
+    @TypeConverter
+    fun fromCurrentToString(current: Current) = Gson().toJson(current)
+    @TypeConverter
+    fun fromStringToCurrent(currentString : String) = Gson().fromJson(currentString, Current::class.java)
+
+    @TypeConverter
+    fun fromHourlyToString(hourly: List<Hourly>) = Gson().toJson(hourly)
+    @TypeConverter
+    fun fromStringToHourly(hourlyString : String) = Gson().fromJson(hourlyString, Array<Hourly>::class.java).toList()
+
+    @TypeConverter
+    fun fromDailyToString(daily: List<Daily>) = Gson().toJson(daily)
+    @TypeConverter
+    fun fromStringToDaily(dailyString : String) = Gson().fromJson(dailyString, Array<Daily>::class.java).toList()
+
+    @TypeConverter
+    fun fromTempToString(temp: Temp) = Gson().toJson(temp)
+    @TypeConverter
+    fun fromStringToTemp(tempString : String) = Gson().fromJson(tempString, Temp::class.java)
+
+    @TypeConverter
+    fun fromFeelsLikeToString(feelsLike: FeelsLike) = Gson().toJson(feelsLike)
+    @TypeConverter
+    fun fromStringToFeelsLike(feelLiksString : String) = Gson().fromJson(feelLiksString, FeelsLike::class.java)
+
+    @TypeConverter
+    fun fromWeatherToString(weather: List<Weather>) = Gson().toJson(weather)
+    @TypeConverter
+    fun fromStringToWeather(weatherString : String) = Gson().fromJson(weatherString, Array<Weather>::class.java).toList()
+
+    @TypeConverter
+    fun fromAlertToString(alert: List<Alert>) = Gson().toJson(alert)
+    @TypeConverter
+    fun fromStringToAlerts(alertString : String) = Gson().fromJson(alertString, Array<Alert>::class.java).toList()
+
+}
 
 

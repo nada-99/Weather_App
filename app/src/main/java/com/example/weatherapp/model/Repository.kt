@@ -28,5 +28,17 @@ class Repository private constructor(
         return flowOf(remoteSource.getWeatherFromApi(latitude, longitude, lang, units))
     }
 
+    override suspend fun getCurrentWeatherFromDB(): Flow<WeatherResponse> {
+        return localSource.getCurrentWeather()
+    }
+
+    override suspend fun insertCurrentWeatherToDB(weatherResponse: WeatherResponse) {
+        return localSource.insertCurrentWeather(weatherResponse)
+    }
+
+    override suspend fun deleteCurrentWeatherToDB() {
+        return localSource.deleteCurrentWeather()
+    }
+
 
 }

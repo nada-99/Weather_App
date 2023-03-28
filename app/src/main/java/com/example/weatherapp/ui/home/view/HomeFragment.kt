@@ -1,11 +1,16 @@
 package com.example.weatherapp.ui.home.view
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,10 +22,11 @@ import com.example.weatherapp.getFormattedDate
 import com.example.weatherapp.getLottiOfWeather
 import com.example.weatherapp.model.Repository
 import com.example.weatherapp.model.WeatherResponse
-import com.example.weatherapp.network.APIState
+import com.example.weatherapp.model.APIState
 import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModel
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -66,20 +72,35 @@ class HomeFragment : Fragment() {
         )
         viewModel = ViewModelProvider(this, myFactory).get(HomeViewModel::class.java)
 
-        viewModel.getWeatherData()
+
+        if(isInternetConnected(requireContext())){
+            //call Api
+            viewModel.getWeatherData()
+        }else{
+            //call DataBase
+            viewModel.getCurrentWeather()
+            Toast.makeText(context, "Please Check your internet connection", Toast.LENGTH_SHORT).show()
+
+//            Snackbar.make(
+//                view,
+//                "Please Check your internet connection",
+//                Snackbar.LENGTH_LONG
+//            ).show()
+        }
 
         lifecycleScope.launch {
             viewModel.weatherData.collectLatest { result ->
                 when (result) {
                     is APIState.Loading -> {
                         Log.i("LOADING", "LOADING: ")
-//                        binding.recyclerView.visibility=View.GONE
                         binding.progressBar.visibility = View.VISIBLE
                     }
                     is APIState.Success -> {
                         binding.progressBar.visibility = View.GONE
                         fitWeatherDataToUi(result.data)
-//                        Log.i("DATAAAA", "$weatherData")
+                        //viewModel.deleteCurrentWeatherToDB()
+                        viewModel.insertCurrentWeatherToDB(result.data)
+                        Log.i("DATAAAA", "${result.data.current.temp}")
                     }
                     else -> {
                         binding.progressBar.visibility = View.GONE
@@ -116,6 +137,23 @@ class HomeFragment : Fragment() {
         binding.cloudTv.text = weatherDetails.current.clouds.toString()
         binding.ultravioletTv.text = weatherDetails.current.uvi.toString()
         binding.visibilityTv.text = weatherDetails.current.visibility.toString()
+    }
+
+    fun isInternetConnected(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+            return when {
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
+            return networkInfo.isConnected
+        }
     }
 
 
