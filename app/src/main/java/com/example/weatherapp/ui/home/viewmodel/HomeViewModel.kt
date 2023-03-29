@@ -6,30 +6,28 @@ import com.example.weatherapp.model.RepositoryInterface
 import com.example.weatherapp.model.APIState
 import com.example.weatherapp.model.WeatherResponse
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repo: RepositoryInterface) : ViewModel() {
 
     private var weatherMutableData = MutableStateFlow<APIState>(APIState.Loading)
-    val weatherData = weatherMutableData.asStateFlow()
+    var weatherData = weatherMutableData
 
 //    init {
 //        getCurrentWeather()
 //    }
 
     //get weather data from api
-    fun getWeatherData() {
+    fun getWeatherData(lat: Double, long: Double) {
         viewModelScope.launch(Dispatchers.IO) {
-            repo.getWeatherResponseFromApi(31.2497, 30.0626)
+            repo.getWeatherResponseFromApi(lat, long)
                 .catch {
                         e -> weatherMutableData.value = APIState.Failure(e)
-                }?.collect {
+                }.collect{
                         data -> weatherMutableData.value = APIState.Success(data)
                 }
+            //weatherData = weatherMutableData
         }
     }
 
@@ -42,6 +40,7 @@ class HomeViewModel(private val repo: RepositoryInterface) : ViewModel() {
                 }?.collectLatest {
                         data -> weatherMutableData.value = APIState.Success(data)
                 }
+            weatherData = weatherMutableData
         }
     }
 
@@ -52,7 +51,7 @@ class HomeViewModel(private val repo: RepositoryInterface) : ViewModel() {
         }
     }
 
-    fun deleteCurrentWeatherToDB(){
+    fun deleteCurrentWeatherFromDB(){
         viewModelScope.launch(Dispatchers.IO) {
             repo.deleteCurrentWeatherToDB()
             //getCurrentWeather()

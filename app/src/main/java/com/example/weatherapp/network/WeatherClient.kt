@@ -11,8 +11,8 @@ class WeatherClient private constructor() : RemoteSource {
     override suspend fun getWeatherFromApi(
         latitude: Double,
         longitude: Double,
-        lang: String,
-        units: String,
+        lang: String?,
+        units: String?,
     ): WeatherResponse {
         return weatherService.getWeather(latitude,longitude, lang, units)
     }

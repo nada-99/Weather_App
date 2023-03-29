@@ -10,8 +10,8 @@ interface WeatherService {
     suspend fun getWeather(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
-        @Query("lang") lang: String,
-        @Query("units") units: String,
+        @Query("lang") lang: String?,
+        @Query("units") units: String?,
         @Query("exclude") exclude: String = Constants.exclude,
         @Query("appid") apiKey: String = Constants.API_KEY
     ): WeatherResponse
