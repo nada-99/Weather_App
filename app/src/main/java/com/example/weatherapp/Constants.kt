@@ -9,6 +9,7 @@ object Constants {
     const val BASE_URL = "https://api.openweathermap.org/data/3.0/"
     const val API_KEY = "40dac0af7018969cbb541943f944ba29"
     const val SP_Key = "my_weather"
+    const val SP_Fav = "FromFav"
     const val firstTime = "firstTime"
     const val language = "language"
     const val temperature = "temperature"

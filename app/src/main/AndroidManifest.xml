@@ -37,7 +37,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCSxoeFIrl9wiuOpjP-33X5rw-yqqljp9E"/>
 
-        <uses-library android:name="com.google.android.gms.maps"/>
 
     </application>
 
