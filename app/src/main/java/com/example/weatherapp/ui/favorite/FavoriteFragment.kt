@@ -42,6 +42,9 @@ class FavoriteFragment : Fragment() {
         binding.backFav.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_favoriteFragment_to_homeFragment)
         }
+        binding.favFab.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_favoriteFragment_to_mapFragment)
+        }
     }
 
 }

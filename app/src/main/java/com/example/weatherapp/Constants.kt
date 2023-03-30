@@ -1,5 +1,7 @@
 package com.example.weatherapp
 
+import android.content.Context
+import android.location.Geocoder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -7,6 +9,7 @@ object Constants {
     const val BASE_URL = "https://api.openweathermap.org/data/3.0/"
     const val API_KEY = "40dac0af7018969cbb541943f944ba29"
     const val SP_Key = "my_weather"
+    const val SP_Fav = "FromFav"
     const val firstTime = "firstTime"
     const val language = "language"
     const val temperature = "temperature"
@@ -15,6 +18,7 @@ object Constants {
     const val lat = "lat"
     const val long = "long"
     const val unit = "unit"
+    const val address = "address"
     enum class Loction_Enum() { map, gps }
     enum class Language_Enum() { en, ar }
     enum class Units_Enum() { standard, metric, imperial }
@@ -76,3 +80,15 @@ fun getLottiOfWeather(icon: String?): Int {
     }
     return idOfIcon
 }
+
+//fun getAddressGeoCoder(latitude: Double, longitude: Double, lang:String, context: Context): String {
+//    var address = ""
+//    val geocoder = Geocoder(context,  Locale(lang))
+//    val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+//    if (addresses != null && addresses.size > 0) {
+//        val city = addresses!![0].locality
+//        val country = addresses[0].countryName
+//        address = country+ "/"+ city
+//    }
+//    return address
+//}
