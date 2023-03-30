@@ -42,6 +42,15 @@ data class Current(
     constructor() : this(0, 0, 0, 0.0, 0.0, 0, 0, 0.0, 0.0, 0, 0, 0.0, 0, null, listOf())
 }
 
+@Entity(tableName = "favoriteLocation",primaryKeys = ["address","lat"])
+data class FavoriteLocation(
+    var lat : Double,
+    var long : Double,
+    var address : String
+){
+    constructor() : this(0.0,0.0,"")
+}
+
 
 data class Minutely(
     val dt: Long,

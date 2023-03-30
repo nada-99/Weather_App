@@ -9,7 +9,7 @@
     app:cardElevation="4dp"
     app:cardMaxElevation="6dp"
     app:cardCornerRadius="10dp"
-    app:cardBackgroundColor="@color/base"
+    app:cardBackgroundColor="@color/cardBackground"
     android:id="@+id/daily_cardView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,7 @@
             android:layout_marginEnd="8dp"
             android:fontFamily="@font/capriola"
             android:text="Clear Sky"
-            android:textSize="24sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/menu_fav_iv"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -35,7 +35,7 @@
             android:id="@+id/menu_fav_iv"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_margin="16dp"
+            android:layout_margin="12dp"
             android:src="@drawable/menu_dots"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
