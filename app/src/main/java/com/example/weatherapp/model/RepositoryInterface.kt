@@ -6,7 +6,14 @@ interface RepositoryInterface {
 
     //call api to get weather data
     suspend fun getWeatherResponseFromApi(latitude: Double, longitude: Double): Flow<WeatherResponse>
+    //Current Weather From Database
     suspend fun getCurrentWeatherFromDB() : Flow<WeatherResponse>
     suspend fun insertCurrentWeatherToDB(weatherResponse: WeatherResponse)
     suspend fun deleteCurrentWeatherToDB()
+
+    //Favorite Locations From Database
+    suspend fun getFavLocationsFromDB() : Flow<List<FavoriteLocation>>
+    suspend fun insertFavLocationToDB(favoriteLocation: FavoriteLocation)
+    suspend fun deleteFavLocationFromDB(favoriteLocation: FavoriteLocation)
+
 }

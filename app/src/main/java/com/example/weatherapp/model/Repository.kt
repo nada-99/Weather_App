@@ -40,5 +40,17 @@ class Repository private constructor(
         return localSource.deleteCurrentWeather()
     }
 
+    override suspend fun getFavLocationsFromDB(): Flow<List<FavoriteLocation>> {
+        return localSource.getFavLocations()
+    }
+
+    override suspend fun insertFavLocationToDB(favoriteLocation: FavoriteLocation) {
+        return localSource.insertToFav(favoriteLocation)
+    }
+
+    override suspend fun deleteFavLocationFromDB(favoriteLocation: FavoriteLocation) {
+        return localSource.deleteFavLocation(favoriteLocation)
+    }
+
 
 }

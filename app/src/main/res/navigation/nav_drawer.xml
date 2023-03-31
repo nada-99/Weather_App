@@ -8,7 +8,27 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.weatherapp.ui.home.view.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="HomeFragment" >
+        <argument
+            android:name="favComing"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="favLat"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="favLong"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <!--        <argument-->
+<!--            android:name="favoriteArgs"-->
+<!--            app:argType="com.example.weatherapp.model.FavoriteLocation"-->
+<!--            app:nullable="true"-->
+<!--            android:defaultValue="@null" />-->
+    </fragment>
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.example.weatherapp.ui.setting.SettingFragment"
@@ -19,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
-        android:name="com.example.weatherapp.ui.favorite.FavoriteFragment"
+        android:name="com.example.weatherapp.ui.favorite.view.FavoriteFragment"
         android:label="FavoriteFragment" >
         <action
             android:id="@+id/action_favoriteFragment_to_homeFragment"
@@ -39,11 +59,14 @@
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.weatherapp.ui.map.MapFragment"
+        android:name="com.example.weatherapp.ui.map.view.MapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" >
         <action
             android:id="@+id/action_mapFragment_to_favoriteFragment"
             app:destination="@id/favoriteFragment" />
     </fragment>
+    <argument
+        android:name="favoriteArgs"
+        android:defaultValue="null" />
 </navigation>
