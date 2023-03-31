@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import com.example.weatherapp.Constants
 import com.example.weatherapp.R
@@ -58,6 +59,39 @@ class SettingFragment : Fragment() {
             findNavController(view).navigate(R.id.action_settingFragment_to_homeFragment)
         }
 
+        binding.locationRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            locationRadioButton = view.findViewById<View>(checkedId) as RadioButton
+            when (locationRadioButton.text) {
+                getString(R.string.gps) -> {
+                    sharedPreference.edit()
+                        .putString(Constants.LocationFrom, Constants.Loction_Enum.gps.toString())
+                        .commit()
+                }
+                getString(R.string.map) -> {
+                    sharedPreference.edit()
+                        .putString(Constants.LocationFrom, Constants.Loction_Enum.map.toString())
+                        .commit()
+                    Navigation.findNavController(view).navigate(R.id.action_settingFragment_to_mapOrGpsFragment3)
+                }
+            }
+        }
+
+        binding.notificationRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            notificationRadioButton = view.findViewById<View>(checkedId) as RadioButton
+            when (notificationRadioButton.text) {
+                getString(R.string.enable) -> {
+                    sharedPreference.edit()
+                        .putString(Constants.notification, Constants.notification_Enum.enable.toString())
+                        .commit()
+                }
+                getString(R.string.disable) -> {
+                    sharedPreference.edit()
+                        .putString(Constants.notification, Constants.notification_Enum.disable.toString())
+                        .commit()
+                }
+            }
+        }
+
         binding.languageRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             langRadioButton = view.findViewById<View>(checkedId) as RadioButton
             when (langRadioButton.text) {
@@ -103,6 +137,25 @@ class SettingFragment : Fragment() {
             requireActivity().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
         var lang = sharedPreference.getString(Constants.language, Constants.Language_Enum.en.toString())
         var units = sharedPreference.getString(Constants.unit,Constants.Units_Enum.metric.toString())
+        var location = sharedPreference.getString(Constants.LocationFrom,Constants.Loction_Enum.gps.toString())
+        var notification = sharedPreference.getString(Constants.notification,Constants.notification_Enum.enable.toString())
+
+        if (location == Constants.Loction_Enum.gps.toString()) {
+            binding.locationRadioGroup.check(binding.gpsRadioButton.id)
+        }
+
+        if (location == Constants.Loction_Enum.map.toString()) {
+            binding.locationRadioGroup.check(binding.mapRadioButton.id)
+        }
+
+        if (notification == Constants.notification_Enum.enable.toString()) {
+            binding.notificationRadioGroup.check(binding.enableRadioButton.id)
+        }
+
+        if (notification == Constants.notification_Enum.disable.toString()) {
+            binding.notificationRadioGroup.check(binding.disableRadioButton.id)
+        }
+
         if (lang == Constants.Language_Enum.en.toString()) {
             binding.languageRadioGroup.check(binding.engSubRadioButton.id)
         }

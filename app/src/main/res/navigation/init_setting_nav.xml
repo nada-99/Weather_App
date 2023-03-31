@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/init_seeting_nav"
+    app:startDestination="@id/initSettingFragment">
+
+    <fragment
+        android:id="@+id/initSettingFragment"
+        android:name="com.example.weatherapp.ui.initalsetting.InitSettingFragment"
+        android:label="fragment_init_setting"
+        tools:layout="@layout/fragment_init_setting" >
+        <action
+            android:id="@+id/action_initSettingFragment_to_mapOrGpsFragment"
+            app:destination="@id/mapOrGpsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapOrGpsFragment"
+        android:name="com.example.weatherapp.ui.initalsetting.MapOrGpsFragment"
+        android:label="fragment_map_or_gps"
+        tools:layout="@layout/fragment_map_or_gps" />
+</navigation>

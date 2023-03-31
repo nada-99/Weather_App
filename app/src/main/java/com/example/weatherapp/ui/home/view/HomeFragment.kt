@@ -39,6 +39,15 @@ class HomeFragment : Fragment() {
     lateinit var sharedPreference: SharedPreferences
     var lat : Double? = null
     var long : Double? = null
+
+/*    override fun onStart() {
+        super.onStart()
+        sharedPreference =
+            requireActivity().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
+        lat = sharedPreference.getString(Constants.lat, "")?.toDoubleOrNull()
+        long = sharedPreference.getString(Constants.long, "")?.toDoubleOrNull()
+        Log.i("GPPPPPPS", "$lat , $long")
+    }*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -54,23 +63,20 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val favNavigationArgs : HomeFragmentArgs by navArgs()
         sharedPreference =
             requireActivity().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
 
+        val favNavigationArgs : HomeFragmentArgs by navArgs()
+
         if(favNavigationArgs.favComing){
-            //Log.i("Arrrrrgs", "Hellllloo")
-//            var favoriteLocation = favNavigationArgs.favoriteArgs
             lat = favNavigationArgs.favLat?.toDoubleOrNull()
             long = favNavigationArgs.favLong?.toDoubleOrNull()
             Log.i("Arrrrrgs", "$lat + $long")
         }else{
             lat = sharedPreference.getString(Constants.lat, "")?.toDoubleOrNull()
             long = sharedPreference.getString(Constants.long, "")?.toDoubleOrNull()
-            Log.i("GPPPPPPS", "$lat + $long")
+            Log.i("GPPPPPPS", "$lat , $long")
         }
-//        lat = sharedPreference.getString(Constants.lat, "")?.toDoubleOrNull()
-//        long = sharedPreference.getString(Constants.long, "")?.toDoubleOrNull()
 
         //Hourly Adapter
         hourlyAdapter = HourlyAdapter(ArrayList(), requireActivity())
@@ -108,10 +114,7 @@ class HomeFragment : Fragment() {
 //                Snackbar.LENGTH_LONG
 //            ).show()
         }
-//        val sharedPreference =
-//            requireContext().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
-//        var latitude = sharedPreference.getString(Constants.lat, "")!!
-//        var longitude = sharedPreference.getString(Constants.long, "")!!
+
         Log.i("LLLat", "$lat + $long")
 
         if (lat != null && long != null) {
@@ -143,9 +146,6 @@ class HomeFragment : Fragment() {
 
     fun fitWeatherDataToUi(weatherDetails: WeatherResponse) {
         //first part
-//        var address = sharedPreference.getString(Constants.address, "")
-//        binding.cityTv.text = address
-//        binding.cityTv.text = weatherDetails.timezone
         binding.cityTv.text = getAddressGeoCoder(lat,long,requireContext())
         binding.dateTv.text = getFormattedDate(weatherDetails.current.dt)
         binding.tempTv.text = weatherDetails.current.temp.toInt().toString() + "°c"
@@ -171,23 +171,5 @@ class HomeFragment : Fragment() {
         binding.ultravioletTv.text = weatherDetails.current.uvi.toString()
         binding.visibilityTv.text = weatherDetails.current.visibility.toString()
     }
-
-/*    fun isInternetConnected(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val network = connectivityManager.activeNetwork ?: return false
-            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
-            return when {
-                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-        } else {
-            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
-            return networkInfo.isConnected
-        }
-    }*/
 
 }

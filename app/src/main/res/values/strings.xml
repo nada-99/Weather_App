@@ -24,4 +24,6 @@
     <string name="enable">Enable</string>
     <string name="disable">Disable</string>
     <string name="addToFav_btn">Save</string>
+    <string name="inital_setup">Initial Setup</string>
+    <string name="save_btn">Save</string>
 </resources>

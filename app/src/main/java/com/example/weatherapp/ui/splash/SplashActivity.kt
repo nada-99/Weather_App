@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherapp.Constants
 import com.example.weatherapp.R
 import com.example.weatherapp.ui.MainActivity
+import com.example.weatherapp.ui.initalsetting.InitSettingActivity
 
 class SplashActivity : AppCompatActivity() {
 
@@ -24,20 +25,40 @@ class SplashActivity : AppCompatActivity() {
         //check if it is the first time to open application
         val sharedPreferences = applicationContext.getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
         val isFirstTime: Boolean = sharedPreferences.getBoolean(Constants.firstTime, true)
-        if (isFirstTime) {
+/*        if (isFirstTime) {
             val editor = sharedPreferences.edit()
             editor.putBoolean(Constants.firstTime, false)
             editor.putString(Constants.language, Constants.Language_Enum.en.toString())
             editor.putString(Constants.unit, Constants.Units_Enum.metric.toString())
             editor.putString(Constants.windSpeed, Constants.WindSpeed_Enum.meter.toString())
             editor.commit()
-        }
+            val intent = Intent(this, InitSettingActivity::class.java)
+            startActivity(intent)
+        }else{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }*/
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-            finish()
+//            val intent = Intent(this, MainActivity::class.java)
+//            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+//            startActivity(intent)
+//            finish()
+            if (isFirstTime) {
+                val editor = sharedPreferences.edit()
+                editor.putBoolean(Constants.firstTime, false)
+                editor.putString(Constants.language, Constants.Language_Enum.en.toString())
+                editor.putString(Constants.unit, Constants.Units_Enum.metric.toString())
+                editor.putString(Constants.windSpeed, Constants.WindSpeed_Enum.meter.toString())
+                editor.commit()
+                val intent = Intent(this, InitSettingActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+            }else{
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+            }
         }, 2500)
 
     }
