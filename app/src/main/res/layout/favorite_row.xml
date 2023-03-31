@@ -26,17 +26,18 @@
             android:text="Clear Sky"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/menu_fav_iv"
+            app:layout_constraintEnd_toStartOf="@+id/delete_icon"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/menu_fav_iv"
+            android:id="@+id/delete_icon"
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_margin="12dp"
-            android:src="@drawable/menu_dots"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/delete_icon_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

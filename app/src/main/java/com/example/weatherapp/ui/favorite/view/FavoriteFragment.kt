@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.R
 import com.example.weatherapp.database.ConcreteLocalSource
 import com.example.weatherapp.databinding.FragmentFavoriteBinding
+import com.example.weatherapp.isInternetConnected
 import com.example.weatherapp.model.FavState
 import com.example.weatherapp.model.FavoriteLocation
 import com.example.weatherapp.model.Repository
@@ -96,12 +98,27 @@ class FavoriteFragment : Fragment() , OnClickFavorite{
             Navigation.findNavController(view).navigate(R.id.action_favoriteFragment_to_homeFragment)
         }
         binding.favFab.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.action_favoriteFragment_to_mapFragment)
+            if(isInternetConnected(requireContext())){
+                Navigation.findNavController(view).navigate(R.id.action_favoriteFragment_to_mapFragment)
+            }else{
+                Toast.makeText(requireContext(), "Check your internet", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
     override fun onClick(favoriteLocation: FavoriteLocation) {
-        TODO("Not yet implemented")
+        Navigation.findNavController(requireView())
+            .navigate(FavoriteFragmentDirections.actionFavoriteFragmentToHomeFragment().apply {
+                favComing = true
+                favLat = favoriteLocation.latitude.toString()
+                favLong = favoriteLocation.longitude.toString()
+                Log.i("ArrrrrgsFavv", "$favLat + $favLong")
+                //favoriteArgs = favoriteLocation
+            })
+    }
+
+    override fun onClickDelete(favoriteLocation: FavoriteLocation) {
+        viewModel.deleteFavFromDB(favoriteLocation)
     }
 
 }

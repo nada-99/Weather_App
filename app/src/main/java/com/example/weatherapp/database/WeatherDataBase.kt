@@ -9,7 +9,7 @@ import com.example.weatherapp.model.FavoriteLocation
 import com.example.weatherapp.model.WeatherResponse
 import com.example.weatherapp.model.WeatherTypeConverter
 
-@Database(entities = arrayOf(WeatherResponse::class,FavoriteLocation::class), exportSchema = false, version = 4 )
+@Database(entities = arrayOf(WeatherResponse::class,FavoriteLocation::class), exportSchema = false, version = 5 )
 @TypeConverters(WeatherTypeConverter::class)
 abstract class WeatherDataBase : RoomDatabase() {
     abstract fun getWeatherDao(): WeatherDao

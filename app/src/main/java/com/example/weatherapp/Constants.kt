@@ -2,6 +2,9 @@ package com.example.weatherapp
 
 import android.content.Context
 import android.location.Geocoder
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -81,14 +84,32 @@ fun getLottiOfWeather(icon: String?): Int {
     return idOfIcon
 }
 
-//fun getAddressGeoCoder(latitude: Double, longitude: Double, lang:String, context: Context): String {
-//    var address = ""
-//    val geocoder = Geocoder(context,  Locale(lang))
-//    val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-//    if (addresses != null && addresses.size > 0) {
-//        val city = addresses!![0].locality
-//        val country = addresses[0].countryName
-//        address = country+ "/"+ city
-//    }
-//    return address
-//}
+fun isInternetConnected(context: Context): Boolean {
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val network = connectivityManager.activeNetwork ?: return false
+        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return when {
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
+    } else {
+        val networkInfo = connectivityManager.activeNetworkInfo ?: return false
+        return networkInfo.isConnected
+    }
+}
+
+fun getAddressGeoCoder(latitude: Double?, longitude: Double?, context: Context): String {
+    var address = ""
+    val geocoder = Geocoder(context,  Locale.getDefault())
+    val addresses = geocoder.getFromLocation(latitude!!, longitude!!, 1)
+    if (addresses != null && addresses.size > 0) {
+        val city = addresses!![0].locality
+        val country = addresses[0].countryName
+        address = country+ "/"+ city
+    }
+    return address
+}

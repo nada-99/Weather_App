@@ -26,7 +26,10 @@ class FavAdapter(private var favList: List<FavoriteLocation>, var myListener: On
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentFav = favList[position]
         holder.binding.cityNameTv.text = currentFav.address
-        holder.binding.menuFavIv.setOnClickListener{
+        holder.binding.deleteIcon.setOnClickListener{
+            myListener.onClickDelete(currentFav)
+        }
+        holder.binding.dailyCardView.setOnClickListener{
             myListener.onClick(currentFav)
         }
     }

@@ -1,56 +1,34 @@
 package com.example.weatherapp.ui.home.view
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.location.Geocoder
-import android.location.Location
-import android.location.LocationManager
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import android.os.Bundle
-import android.os.Looper
-import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieDrawable
-import com.example.weatherapp.Constants
+import com.example.weatherapp.*
 import com.example.weatherapp.database.ConcreteLocalSource
 import com.example.weatherapp.databinding.FragmentHomeBinding
-import com.example.weatherapp.getFormattedDate
-import com.example.weatherapp.getLottiOfWeather
 import com.example.weatherapp.model.Repository
 import com.example.weatherapp.model.WeatherResponse
 import com.example.weatherapp.model.APIState
+import com.example.weatherapp.model.FavoriteLocation
 import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModel
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModelFactory
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.*
 import kotlin.collections.ArrayList
 
 const val PERMISSION_ID = 44
-
 class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
@@ -59,6 +37,8 @@ class HomeFragment : Fragment() {
     lateinit var hourlyAdapter: HourlyAdapter
     lateinit var dailyAdapter: DailyAdapter
     lateinit var sharedPreference: SharedPreferences
+    var lat : Double? = null
+    var long : Double? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -74,10 +54,23 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val favNavigationArgs : HomeFragmentArgs by navArgs()
         sharedPreference =
             requireActivity().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
-        var lat_ = sharedPreference.getString(Constants.lat, "")?.toDoubleOrNull()
-        var long_ = sharedPreference.getString(Constants.long, "")?.toDoubleOrNull()
+
+        if(favNavigationArgs.favComing){
+            //Log.i("Arrrrrgs", "Hellllloo")
+//            var favoriteLocation = favNavigationArgs.favoriteArgs
+            lat = favNavigationArgs.favLat?.toDoubleOrNull()
+            long = favNavigationArgs.favLong?.toDoubleOrNull()
+            Log.i("Arrrrrgs", "$lat + $long")
+        }else{
+            lat = sharedPreference.getString(Constants.lat, "")?.toDoubleOrNull()
+            long = sharedPreference.getString(Constants.long, "")?.toDoubleOrNull()
+            Log.i("GPPPPPPS", "$lat + $long")
+        }
+//        lat = sharedPreference.getString(Constants.lat, "")?.toDoubleOrNull()
+//        long = sharedPreference.getString(Constants.long, "")?.toDoubleOrNull()
 
         //Hourly Adapter
         hourlyAdapter = HourlyAdapter(ArrayList(), requireActivity())
@@ -119,10 +112,10 @@ class HomeFragment : Fragment() {
 //            requireContext().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
 //        var latitude = sharedPreference.getString(Constants.lat, "")!!
 //        var longitude = sharedPreference.getString(Constants.long, "")!!
-        Log.i("LLLat", "$lat_ + $long_")
+        Log.i("LLLat", "$lat + $long")
 
-        if (lat_ != null && long_ != null) {
-            viewModel.getWeatherData(lat_, long_)
+        if (lat != null && long != null) {
+            viewModel.getWeatherData(lat!!, long!!)
         }
 
         lifecycleScope.launch {
@@ -150,9 +143,10 @@ class HomeFragment : Fragment() {
 
     fun fitWeatherDataToUi(weatherDetails: WeatherResponse) {
         //first part
-        var address = sharedPreference.getString(Constants.address, "")
-        binding.cityTv.text = address
-        //binding.cityTv.text = weatherDetails.timezone
+//        var address = sharedPreference.getString(Constants.address, "")
+//        binding.cityTv.text = address
+//        binding.cityTv.text = weatherDetails.timezone
+        binding.cityTv.text = getAddressGeoCoder(lat,long,requireContext())
         binding.dateTv.text = getFormattedDate(weatherDetails.current.dt)
         binding.tempTv.text = weatherDetails.current.temp.toInt().toString() + "°c"
         binding.weatherDesTv.text = weatherDetails.current.weather.firstOrNull()?.description ?: ""
@@ -178,7 +172,7 @@ class HomeFragment : Fragment() {
         binding.visibilityTv.text = weatherDetails.current.visibility.toString()
     }
 
-    fun isInternetConnected(context: Context): Boolean {
+/*    fun isInternetConnected(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -194,6 +188,6 @@ class HomeFragment : Fragment() {
             val networkInfo = connectivityManager.activeNetworkInfo ?: return false
             return networkInfo.isConnected
         }
-    }
+    }*/
 
 }

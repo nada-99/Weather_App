@@ -1,11 +1,12 @@
 package com.example.weatherapp.model
 
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import java.io.Serializable
 
 @Entity(tableName = "weatherResponse",primaryKeys = ["isFav","lat","lon"])
 @TypeConverters(WeatherTypeConverter::class)
@@ -42,14 +43,26 @@ data class Current(
     constructor() : this(0, 0, 0, 0.0, 0.0, 0, 0, 0.0, 0.0, 0, 0, 0.0, 0, null, listOf())
 }
 
-@Entity(tableName = "favoriteLocation",primaryKeys = ["address","lat"])
+
+@Entity(tableName = "favoriteLocation")
 data class FavoriteLocation(
-    var lat : Double,
-    var long : Double,
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0,
+    var latitude : Double,
+    var longitude : Double,
     var address : String
 ){
-    constructor() : this(0.0,0.0,"")
+    constructor() : this(0,0.0,0.0,"")
 }
+
+//@Entity(tableName = "favLocation")
+//data class FavLocation(
+//    @PrimaryKey(autoGenerate = true)
+//    var id: Long = 0,
+//    var lat : Double,
+//    var longtuit : Double,
+//    var address : String
+//)
 
 
 data class Minutely(

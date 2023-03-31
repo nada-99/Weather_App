@@ -19,7 +19,7 @@ interface WeatherDao {
     @Query("SELECT * FROM favoriteLocation")
     fun getFavLocations(): Flow<List<FavoriteLocation>>
     //suspend fun getFavLocations(): List<Product>
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertFavLocation(favoriteLocation: FavoriteLocation)
     @Delete
     suspend fun deleteFavLocation(favoriteLocation: FavoriteLocation)

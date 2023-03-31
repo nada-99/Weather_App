@@ -91,9 +91,9 @@ class MapFragment : Fragment() {
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it,5f))
                     googleMap.addMarker(marker)
 
-                    favoriteLocation.lat = it.latitude
-                    favoriteLocation.long = it.longitude
-                    Log.i("Lat&Long Fav", "onMapClick: ${favoriteLocation.lat} , ${favoriteLocation.long}")
+                    favoriteLocation.latitude = it.latitude
+                    favoriteLocation.longitude = it.longitude
+                    Log.i("Lat&Long Fav", "onMapClick: ${favoriteLocation.latitude} , ${favoriteLocation.longitude}")
 
                     val addresses = geoCoder.getFromLocation(it.latitude, it.longitude, 1)
                     val city = addresses!![0].locality

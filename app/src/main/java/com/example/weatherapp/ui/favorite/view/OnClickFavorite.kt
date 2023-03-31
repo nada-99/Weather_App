@@ -4,4 +4,5 @@ import com.example.weatherapp.model.FavoriteLocation
 
 interface OnClickFavorite {
     fun onClick(favoriteLocation: FavoriteLocation)
+    fun onClickDelete(favoriteLocation: FavoriteLocation)
 }
