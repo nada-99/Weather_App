@@ -1,6 +1,7 @@
 package com.example.weatherapp.ui.setting
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import androidx.navigation.Navigation.findNavController
 import com.example.weatherapp.Constants
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentSettingBinding
+import com.example.weatherapp.ui.MainActivity
 
 class SettingFragment : Fragment() {
 
@@ -66,6 +68,9 @@ class SettingFragment : Fragment() {
                     sharedPreference.edit()
                         .putString(Constants.LocationFrom, Constants.Loction_Enum.gps.toString())
                         .commit()
+                    val intent = Intent(requireContext(), MainActivity::class.java)
+                    startActivity(intent)
+
                 }
                 getString(R.string.map) -> {
                     sharedPreference.edit()

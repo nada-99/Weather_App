@@ -29,6 +29,7 @@ import com.example.weatherapp.Constants
 import com.example.weatherapp.R
 import com.example.weatherapp.ui.MainActivity
 import com.example.weatherapp.ui.home.view.PERMISSION_ID
+import com.example.weatherapp.ui.setting.MapManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -70,6 +71,8 @@ class InitSettingFragment : Fragment() {
         sharedPreference =
             requireActivity().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
 
+//        mapManager = MapManager(requireContext())
+
         dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -84,20 +87,25 @@ class InitSettingFragment : Fragment() {
 
         saveBtn.setOnClickListener {
             if (gpsRadioBtn.isChecked) {
+                locationButtonChecked = true
                 sharedPreference.edit().putString(Constants.LocationFrom, Constants.Loction_Enum.gps.toString()).apply()
                 getLastLocation()
-                locationButtonChecked = true
+
             } else if (mapRadioBtn.isChecked) {
+                locationButtonChecked = true
                 sharedPreference.edit().putString(Constants.LocationFrom, Constants.Loction_Enum.map.toString()).apply()
                 Navigation.findNavController(view).navigate(R.id.action_initSettingFragment_to_mapOrGpsFragment)
-                locationButtonChecked = true
-            }else if (enableRadioBtn.isChecked) {
+            }
+
+            if (enableRadioBtn.isChecked) {
                 notificationButtonChecked = true
                 sharedPreference.edit().putString(Constants.notification, Constants.notification_Enum.enable.toString()).apply()
             }else if (disableRadioBtn.isChecked) {
                 notificationButtonChecked = true
+                dialog.dismiss()
                 sharedPreference.edit().putString(Constants.notification, Constants.notification_Enum.disable.toString()).apply()
             }
+
             if(notificationButtonChecked && locationButtonChecked){
                 dialog.dismiss()
             }else{
@@ -120,16 +128,11 @@ class InitSettingFragment : Fragment() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == 1001) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLastLocation()
-            }
-        }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     @SuppressLint("MissingPermission")
-    private fun getLastLocation() {
+    fun getLastLocation() {
         if (checkPermissions()) {
             if (isLocationEnable()) {
                 requestNewLocationData()
