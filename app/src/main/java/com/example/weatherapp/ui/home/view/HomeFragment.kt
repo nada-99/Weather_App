@@ -26,6 +26,10 @@ import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModel
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModelFactory
 import kotlinx.coroutines.launch
+import org.intellij.lang.annotations.Language
+import java.math.RoundingMode
+import java.sql.SQLTransactionRollbackException
+import java.util.Locale
 import kotlin.collections.ArrayList
 
 const val PERMISSION_ID = 44
@@ -39,15 +43,10 @@ class HomeFragment : Fragment() {
     lateinit var sharedPreference: SharedPreferences
     var lat : Double? = null
     var long : Double? = null
+    lateinit var languageFromSP : String
+    lateinit var tempUnit : String
+    lateinit var windUnit :String
 
-/*    override fun onStart() {
-        super.onStart()
-        sharedPreference =
-            requireActivity().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
-        lat = sharedPreference.getString(Constants.lat, "")?.toDoubleOrNull()
-        long = sharedPreference.getString(Constants.long, "")?.toDoubleOrNull()
-        Log.i("GPPPPPPS", "$lat , $long")
-    }*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -65,6 +64,9 @@ class HomeFragment : Fragment() {
 
         sharedPreference =
             requireActivity().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
+        languageFromSP = sharedPreference.getString(Constants.language, "")!!
+        tempUnit = sharedPreference.getString(Constants.unit , "")!!
+        windUnit = sharedPreference.getString(Constants.windSpeed , "")!!
 
         val favNavigationArgs : HomeFragmentArgs by navArgs()
 
@@ -146,9 +148,30 @@ class HomeFragment : Fragment() {
 
     fun fitWeatherDataToUi(weatherDetails: WeatherResponse) {
         //first part
-        binding.cityTv.text = getAddressGeoCoder(lat,long,requireContext())
-        binding.dateTv.text = getFormattedDate(weatherDetails.current.dt)
-        binding.tempTv.text = weatherDetails.current.temp.toInt().toString() + "°c"
+        binding.cityTv.text = getAddressGeoCoder(lat,long,requireContext(),languageFromSP)
+        binding.dateTv.text = getFormattedDate(weatherDetails.current.dt,languageFromSP)
+        if(languageFromSP == "ar"){
+            binding.tempTv.text = "${convertToArabicNumber(weatherDetails.current.temp.toInt())} ${getUnit(tempUnit,languageFromSP)}"
+            //last part
+            binding.pressureTv.text = convertToArabicNumber(weatherDetails.current.pressure)
+            binding.humidityTv.text = convertToArabicNumber(weatherDetails.current.humidity) +"%"
+//            binding.windTv.text = convertToArabicNumber((getWindSpeed(windUnit , tempUnit ,weatherDetails.current.windSpeed,requireContext())).toInt())
+            binding.windTv.text = convertToArabicNumber(weatherDetails.current.windSpeed.toInt()) + getCurrentSpeed(requireContext())
+            binding.cloudTv.text = convertToArabicNumber(weatherDetails.current.clouds)+"%"
+            binding.ultravioletTv.text = convertToArabicNumber(weatherDetails.current.uvi.toInt())
+            binding.visibilityTv.text = convertToArabicNumber(weatherDetails.current.visibility)+ getString(R.string.m)
+        }else{
+            binding.tempTv.text = weatherDetails.current.temp.toInt().toString() + " ${getUnit(tempUnit,languageFromSP)}"
+            //last part
+            binding.pressureTv.text = weatherDetails.current.pressure.toString()
+            binding.humidityTv.text = weatherDetails.current.humidity.toString() +"%"
+//            binding.windTv.text = getWindSpeed(windUnit , tempUnit ,weatherDetails.current.windSpeed,requireContext())
+            binding.windTv.text = weatherDetails.current.windSpeed.toBigDecimal().setScale(2, RoundingMode.UP).toString()+ getCurrentSpeed(requireContext())
+            binding.cloudTv.text = weatherDetails.current.clouds.toString()+"%"
+            binding.ultravioletTv.text = weatherDetails.current.uvi.toString()
+            binding.visibilityTv.text = weatherDetails.current.visibility.toString()+ getString(R.string.m)
+        }
+
         binding.weatherDesTv.text = weatherDetails.current.weather.firstOrNull()?.description ?: ""
         binding.weatherDesLotti.setAnimation(getLottiOfWeather(weatherDetails.current.weather.firstOrNull()?.icon))
         binding.weatherDesLotti.repeatCount = LottieDrawable.INFINITE
@@ -162,14 +185,6 @@ class HomeFragment : Fragment() {
         dailyAdapter.setListDaily(weatherDetails.daily)
         dailyAdapter.notifyDataSetChanged()
         binding.dailyRecyclerView.adapter = dailyAdapter
-
-        //last part
-        binding.pressureTv.text = weatherDetails.current.pressure.toString()
-        binding.humidityTv.text = weatherDetails.current.humidity.toString()
-        binding.windTv.text = weatherDetails.current.windSpeed.toString()
-        binding.cloudTv.text = weatherDetails.current.clouds.toString()
-        binding.ultravioletTv.text = weatherDetails.current.uvi.toString()
-        binding.visibilityTv.text = weatherDetails.current.visibility.toString()
     }
 
 }

@@ -19,19 +19,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.example.weatherapp.Constants
 import com.example.weatherapp.R
-import com.example.weatherapp.database.ConcreteLocalSource
-import com.example.weatherapp.model.Repository
-import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.home.view.PERMISSION_ID
-import com.example.weatherapp.ui.home.viewmodel.HomeViewModel
-import com.example.weatherapp.ui.home.viewmodel.HomeViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -50,35 +44,19 @@ class MainActivity : AppCompatActivity() {
     lateinit var mFusedLocationClient: FusedLocationProviderClient
     lateinit var geoCoder: Geocoder
     lateinit var sharedPreference: SharedPreferences
-
-    lateinit var myFactory: HomeViewModelFactory
-    lateinit var viewModel: HomeViewModel
+    lateinit var address: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        myFactory = HomeViewModelFactory(
-            Repository.getInstance(
-                WeatherClient.getInstance(),
-                ConcreteLocalSource(this),
-                this
-            )
-        )
-        viewModel = ViewModelProvider(this, myFactory).get(HomeViewModel::class.java)
-
         //GPs
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         geoCoder = Geocoder(this, Locale.getDefault())
+        getLastLocation()
 
         sharedPreference =
             applicationContext.getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
-
-        var location = sharedPreference.getString(Constants.LocationFrom,Constants.Loction_Enum.gps.toString())
-        if (location == Constants.Loction_Enum.gps.toString()) {
-            getLastLocation()
-            viewModel.getWeatherData(lat, long)
-        }
 
         //setup navigation drawer
         getSupportActionBar()?.setElevation(0F)
@@ -88,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawerLayout)
 
         val actionBar = supportActionBar
-        actionBar?.setHomeAsUpIndicator(R.drawable.menu)
+        actionBar?.setHomeAsUpIndicator(R.drawable.menu_icon_24)
         actionBar!!.setDisplayShowHomeEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
 
@@ -110,9 +88,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (checkPermissions()){
+        if (checkPermissions())
             getLastLocation()
-        }
     }
 
     override fun onRequestPermissionsResult(
@@ -190,8 +167,14 @@ class MainActivity : AppCompatActivity() {
                 long = mLastLocation.longitude
                 Log.i("Lat & Long", "Lat & Long : $lat, $long")
 
+                val addresses = geoCoder.getFromLocation(mLastLocation!!.getLatitude(), mLastLocation!!.getLongitude(), 1)
+                val city = addresses!![0].locality
+                val country = addresses[0].countryName
+                address = country+ "/"+ city
+
                 sharedPreference.edit().putString(Constants.lat, lat.toString()).apply()
                 sharedPreference.edit().putString(Constants.long, long.toString()).apply()
+                sharedPreference.edit().putString(Constants.address, address).apply()
             }
 
             mFusedLocationClient.removeLocationUpdates(this)

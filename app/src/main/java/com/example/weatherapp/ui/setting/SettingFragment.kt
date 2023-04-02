@@ -3,6 +3,7 @@ package com.example.weatherapp.ui.setting
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.example.weatherapp.Constants
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentSettingBinding
 import com.example.weatherapp.ui.MainActivity
+import java.util.*
 
 class SettingFragment : Fragment() {
 
@@ -54,6 +56,9 @@ class SettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        var context: Context
+        var resources: Resources
 
         checkRadioButton()
 
@@ -104,11 +109,13 @@ class SettingFragment : Fragment() {
                     sharedPreference.edit()
                         .putString(Constants.language, Constants.Language_Enum.en.toString())
                         .commit()
+                    changeLanguage("en")
                 }
                 getString(R.string.arabic) -> {
                     sharedPreference.edit()
                         .putString(Constants.language, Constants.Language_Enum.ar.toString())
                         .commit()
+                    changeLanguage("ar")
                 }
             }
 
@@ -130,6 +137,22 @@ class SettingFragment : Fragment() {
                 getString(R.string.kelvin) -> {
                     sharedPreference.edit()
                         .putString(Constants.unit, Constants.Units_Enum.standard.toString())
+                        .commit()
+                }
+            }
+        }
+
+        binding.windSpeedRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            windSpeedRadioButton = view.findViewById<View>(checkedId) as RadioButton
+            when (windSpeedRadioButton.text) {
+                getString(R.string.meter_sec) -> {
+                    sharedPreference.edit()
+                        .putString(Constants.windSpeed, Constants.WindSpeed_Enum.meter.toString())
+                        .commit()
+                }
+                getString(R.string.mile_hour) -> {
+                    sharedPreference.edit()
+                        .putString(Constants.windSpeed, Constants.WindSpeed_Enum.mile.toString())
                         .commit()
                 }
             }
@@ -177,6 +200,17 @@ class SettingFragment : Fragment() {
             binding.temperatureRadioGroup.check(binding.kelvinRadioButton.id)
         }
 
+    }
+
+    fun changeLanguage(language: String) {
+        val metric = resources.displayMetrics
+        val configuration = resources.configuration
+        configuration.locale = Locale(language)
+        Locale.setDefault(Locale(language))
+        configuration.setLayoutDirection(Locale(language))
+        resources.updateConfiguration(configuration, metric)
+        onConfigurationChanged(configuration)
+        requireActivity().recreate()
     }
 
 

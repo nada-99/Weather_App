@@ -20,15 +20,16 @@
 
         <TextView
             android:id="@+id/date_day_tv"
-            android:layout_width="70dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/capriola"
+            android:gravity="center"
             android:text="Today"
             android:textSize="14sp"
-            android:gravity="center"
-            android:fontFamily="@font/capriola"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/icon_weather_iv"
-            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,8 +49,8 @@
             android:id="@+id/temp_desc_tv"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:text="scattered clouds"
             android:fontFamily="@font/capriola"
+            android:text="scattered clouds"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/max_min_temp_tv"
@@ -59,11 +60,13 @@
 
         <TextView
             android:id="@+id/max_min_temp_tv"
-            android:layout_width="70dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="28/18 °C"
+            android:layout_marginEnd="8dp"
             android:fontFamily="@font/capriola"
+            android:gravity="center"
+            android:text="28/18 °C"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

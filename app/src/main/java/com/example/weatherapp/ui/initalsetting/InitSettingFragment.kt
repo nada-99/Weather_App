@@ -1,7 +1,6 @@
 package com.example.weatherapp.ui.initalsetting
 
 import android.annotation.SuppressLint
-import android.Manifest
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -24,16 +23,24 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.weatherapp.Constants
 import com.example.weatherapp.R
+import com.example.weatherapp.database.ConcreteLocalSource
+import com.example.weatherapp.model.APIState
+import com.example.weatherapp.model.Repository
+import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.MainActivity
 import com.example.weatherapp.ui.home.view.PERMISSION_ID
-import com.example.weatherapp.ui.setting.MapManager
+import com.example.weatherapp.ui.home.viewmodel.HomeViewModel
+import com.example.weatherapp.ui.home.viewmodel.HomeViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.launch
 import java.util.*
 
 class InitSettingFragment : Fragment() {
@@ -44,6 +51,8 @@ class InitSettingFragment : Fragment() {
     var lat: Double = 0.0
     var long: Double = 0.0
     lateinit var dialog : Dialog
+    lateinit var myFactory: HomeViewModelFactory
+    lateinit var viewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +74,15 @@ class InitSettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        myFactory = HomeViewModelFactory(
+            Repository.getInstance(
+                WeatherClient.getInstance(),
+                ConcreteLocalSource(requireContext()),
+                requireContext()
+            )
+        )
+        viewModel = ViewModelProvider(this, myFactory).get(HomeViewModel::class.java)
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         geoCoder = Geocoder(requireContext(), Locale.getDefault())
@@ -197,6 +215,25 @@ class InitSettingFragment : Fragment() {
                 lat = mLastLocation.latitude
                 long = mLastLocation.longitude
                 Log.i("Lat & Long", "Lat & Long : $lat, $long")
+
+/*                viewModel.getWeatherData(lat!!, long!!)
+
+                lifecycleScope.launch {
+                    viewModel.weatherData.collect { result ->
+                        when (result) {
+                            is APIState.Loading -> {
+                                Log.i("LOADING", "LOADING: ")
+                            }
+                            is APIState.Success -> {
+                                viewModel.insertCurrentWeatherToDB(result.data)
+                                Log.i("DATAAAA", "${result.data.current.temp}")
+                            }
+                            else -> {
+                                Log.i("ERRRRORR", "ERRRRORR: ")
+                            }
+                        }
+                    }
+                }*/
 
                 sharedPreference.edit().putString(Constants.lat, lat.toString()).apply()
                 sharedPreference.edit().putString(Constants.long, long.toString()).apply()

@@ -50,20 +50,11 @@ data class FavoriteLocation(
     var id: Long = 0,
     var latitude : Double,
     var longitude : Double,
-    var address : String
+    var address_en : String,
+    var address_ar : String
 ){
-    constructor() : this(0,0.0,0.0,"")
+    constructor() : this(0,0.0,0.0,"","")
 }
-
-//@Entity(tableName = "favLocation")
-//data class FavLocation(
-//    @PrimaryKey(autoGenerate = true)
-//    var id: Long = 0,
-//    var lat : Double,
-//    var longtuit : Double,
-//    var address : String
-//)
-
 
 data class Minutely(
     val dt: Long,

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Weather App</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="favorites_header">المفضلة</string>
+    <string name="add_places_fav">Add Places</string>
+    <string name="alerts_header">إنذار</string>
+    <string name="add_alerts">Add Alerts</string>
+    <string name="setting_header">الاعدادات</string>
+    <string name="location_setting">الموقع</string>
+    <string name="language_setting">اللغة</string>
+    <string name="gps">موقعك الحالى</string>
+    <string name="map">خريطة</string>
+    <string name="english">الانجليزية</string>
+    <string name="arabic">العربية</string>
+    <string name="temperature">درجة الحرارة</string>
+    <string name="wind_speed">سرعه الرياح</string>
+    <string name="celsius">سليزيس</string>
+    <string name="kelvin">كلفن</string>
+    <string name="fahrenheit">فهرنهايت</string>
+    <string name="meter_sec">م/ث</string>
+    <string name="mile_hour">م/س</string>
+    <string name="notifications">التنبيهات</string>
+    <string name="enable">تفعيل</string>
+    <string name="disable">عدم تفعيل</string>
+    <string name="addToFav_btn">حفظ</string>
+    <string name="inital_setup">الاعدات الاساسيه</string>
+    <string name="save_btn">حفظ</string>
+
+    <string name="home">الصفحه الرئيسيه</string>
+    <string name="next_7_days">درجات الحراه خلال الاسبوع</string>
+    <string name="weather_details">تفاصيل الطقس</string>
+    <string name="pressure">الضغط</string>
+    <string name="humidity">رطوبة</string>
+    <string name="wind">الرياح</string>
+    <string name="cloud">السحب</string>
+    <string name="ultra_violet"> فوق بنفسجي</string>
+    <string name="visibility">الرؤية</string>
+
+    <string name="ok">نعم</string>
+    <string name="cancel">الغاء</string>
+    <string name="delete_confirm">تأكيد الحذف</string>
+    <string name="delete_qustion">هل انت متأكد من حذف هذا الموقع؟</string>
+    <string name="notValidMap">يجب تحديد مكان قبل الحفظ او لا يستطيع التعرف على المكان</string>
+    <string name="m">م</string>
+</resources>
