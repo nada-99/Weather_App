@@ -4,20 +4,20 @@
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/home_icon_24"
-        android:title="Home" />
+        android:title="@string/home" />
 
     <item
         android:id="@+id/favoriteFragment"
         android:icon="@drawable/favorite_icon_24"
-        android:title="Favorites" />
+        android:title="@string/favorites_header" />
 
     <item
         android:id="@+id/alertsFragment"
         android:icon="@drawable/alert_icon"
-        android:title="Alerts"/>
+        android:title="@string/alerts_header"/>
 
     <item
         android:id="@+id/settingFragment"
         android:icon="@drawable/settings_icon_24"
-        android:title="Setting"/>
+        android:title="@string/setting_header"/>
 </menu>

@@ -18,6 +18,9 @@
         android:theme="@style/Theme.WeatherApp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.initalsetting.InitSettingActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true">
             <intent-filter>
@@ -26,18 +29,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.MainActivity"
             android:exported="true" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCSxoeFIrl9wiuOpjP-33X5rw-yqqljp9E"/>
-
-
+            android:value="AIzaSyCSxoeFIrl9wiuOpjP-33X5rw-yqqljp9E" />
     </application>
 
 </manifest>

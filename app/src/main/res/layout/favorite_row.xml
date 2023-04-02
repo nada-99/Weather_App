@@ -34,10 +34,10 @@
         <ImageView
             android:id="@+id/delete_icon"
             android:layout_width="30dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_margin="12dp"
             android:layout_marginTop="16dp"
-            android:src="@drawable/delete_icon_24"
+            android:src="@drawable/custom_delete_icon_fav"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

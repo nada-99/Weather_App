@@ -1,10 +1,16 @@
 package com.example.weatherapp
 
+import android.annotation.TargetApi
 import android.content.Context
+import android.content.ContextWrapper
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.location.Geocoder
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.preference.PreferenceManager
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,26 +28,31 @@ object Constants {
     const val long = "long"
     const val unit = "unit"
     const val address = "address"
+    const val LocationFrom = "locationFrom"
+    const val notification = "notification"
+
     enum class Loction_Enum() { map, gps }
     enum class Language_Enum() { en, ar }
     enum class Units_Enum() { standard, metric, imperial }
     enum class WindSpeed_Enum() { meter,mile }
+
+    enum class notification_Enum() { enable,disable }
 }
 
-fun getFormattedDate(timestamp: Long): String {
+fun getFormattedDate(timestamp: Long, language: String): String {
     val date = Date(timestamp * 1000)
-    val dateFormat = SimpleDateFormat("EEE , M/d/yyyy", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("EEE , M/d/yyyy", Locale(language))
     return dateFormat.format(date)
 }
 
-fun getTimeHourlyFormat(timestamp: Long): String {
-    val sdf = SimpleDateFormat("h:mm a", Locale.getDefault())
+fun getTimeHourlyFormat(timestamp: Long, language: String): String {
+    val sdf = SimpleDateFormat("h:mm a", Locale(language))
     val date = Date(timestamp * 1000L)
     return sdf.format(date)
 }
 
-fun getDayFormat(timestamp: Long): String {
-    val sdf = SimpleDateFormat("EE", Locale.getDefault())
+fun getDayFormat(timestamp: Long, language: String): String {
+    val sdf = SimpleDateFormat("EE", Locale(language))
     val date = Date(timestamp * 1000L)
     return sdf.format(date)
 }
@@ -102,14 +113,79 @@ fun isInternetConnected(context: Context): Boolean {
     }
 }
 
-fun getAddressGeoCoder(latitude: Double?, longitude: Double?, context: Context): String {
+fun convertToArabicNumber(number: Int): String {
+    val nf = NumberFormat.getInstance(Locale("ar"))
+    return nf.format(number)
+}
+fun getAddressGeoCoder(latitude: Double?, longitude: Double?, context: Context , language: String): String {
     var address = ""
-    val geocoder = Geocoder(context,  Locale.getDefault())
+    val geocoder = Geocoder(context,  Locale(language))
     val addresses = geocoder.getFromLocation(latitude!!, longitude!!, 1)
     if (addresses != null && addresses.size > 0) {
         val city = addresses!![0].locality
         val country = addresses[0].countryName
-        address = country+ "/"+ city
+//        val state = addresses[0].adminArea
+        val knownName = addresses[0].featureName
+        if(city == null){
+            address = country
+        }else{
+            address = country+ "/"+ city
+        }
+        if(city == null && country == null)
+            address = ""
     }
     return address
+}
+
+fun getUnit(unit:String,language: String):String{
+    var result = ""
+    if (language == "en" && unit == Constants.Units_Enum.metric.toString()){
+        result = "°c"
+    }
+    if (language == "en" && unit == Constants.Units_Enum.imperial.toString()){
+        result = "°F"
+    }
+    if (language == "en" && unit == Constants.Units_Enum.standard.toString()){
+        result = "K"
+    }
+    if (language == "ar" && unit == Constants.Units_Enum.metric.toString()){
+        result = "°م"
+    }
+    if (language == "ar" && unit == Constants.Units_Enum.imperial.toString()){
+        result = "°ف"
+    }
+    if (language == "ar" && unit == Constants.Units_Enum.standard.toString()){
+        result = "°ك"
+    }
+    return result
+}
+
+fun getCurrentSpeed(context: Context): String {
+    val sharedPreference =  context.getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
+    return when (  sharedPreference.getString(Constants.unit,Constants.Units_Enum.standard.toString())) {
+        Constants.Units_Enum.metric.toString() -> {
+            context.getString(R.string.meter_sec)
+        }
+        Constants.Units_Enum.imperial.toString()-> {
+            context.getString(R.string.mile_hour)
+        }
+        Constants.Units_Enum.standard.toString() -> {
+            context.getString(R.string.meter_sec)
+        }
+        else -> {
+            context.getString(R.string.meter_sec)
+        }
+    }
+}
+
+fun getWindSpeed(windSpeedUnit:String , unit:String , windSpeed:Double , context: Context):String{
+    var result = ""
+    if(windSpeedUnit == Constants.WindSpeed_Enum.meter.toString() && unit == Constants.Units_Enum.imperial.toString()){
+        result = (0.44704*(windSpeed).toInt()).toString() + context.getString(R.string.meter_sec)
+    }else if(windSpeedUnit == Constants.WindSpeed_Enum.mile.toString() && (unit == Constants.Units_Enum.metric.toString() || unit == Constants.Units_Enum.standard.toString())){
+        result = (2.23694*(windSpeed).toInt()).toString()+ context.getString(R.string.mile_hour)
+    }else{
+        result = windSpeed.toInt().toString() + getCurrentSpeed(context)
+    }
+    return result
 }

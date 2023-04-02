@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawerLayout)
 
         val actionBar = supportActionBar
-        actionBar?.setHomeAsUpIndicator(R.drawable.menu)
+        actionBar?.setHomeAsUpIndicator(R.drawable.menu_icon_24)
         actionBar!!.setDisplayShowHomeEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
 

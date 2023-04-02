@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_settingFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_mapOrGpsFragment3"
+            app:destination="@id/mapOrGpsFragment3" />
     </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
@@ -69,4 +72,8 @@
     <argument
         android:name="favoriteArgs"
         android:defaultValue="null" />
+    <fragment
+        android:id="@+id/mapOrGpsFragment3"
+        android:name="com.example.weatherapp.ui.initalsetting.MapOrGpsFragment"
+        android:label="MapOrGpsFragment" />
 </navigation>

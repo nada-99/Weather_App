@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -36,8 +37,8 @@ class FavoriteFragment : Fragment() , OnClickFavorite{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
+
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
@@ -118,7 +119,15 @@ class FavoriteFragment : Fragment() , OnClickFavorite{
     }
 
     override fun onClickDelete(favoriteLocation: FavoriteLocation) {
-        viewModel.deleteFavFromDB(favoriteLocation)
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.delete_confirm))
+            .setMessage(getString(R.string.delete_qustion))
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                viewModel.deleteFavFromDB(favoriteLocation)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+
     }
 
 }
