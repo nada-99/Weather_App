@@ -2,6 +2,7 @@ package com.example.weatherapp.database
 
 import androidx.room.*
 import com.example.weatherapp.model.FavoriteLocation
+import com.example.weatherapp.model.MyAlert
 import com.example.weatherapp.model.WeatherResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -23,5 +24,14 @@ interface WeatherDao {
     suspend fun insertFavLocation(favoriteLocation: FavoriteLocation)
     @Delete
     suspend fun deleteFavLocation(favoriteLocation: FavoriteLocation)
+
+    //Alerts
+    @Query("SELECT * FROM myAlert")
+    fun getAllAlerts(): Flow<List<MyAlert>>
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAlert(myAlert: MyAlert)
+    @Delete
+    suspend fun deleteAlert(myAlert: MyAlert)
+
 
 }

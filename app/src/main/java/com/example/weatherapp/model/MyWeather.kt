@@ -55,6 +55,18 @@ data class FavoriteLocation(
 ){
     constructor() : this(0,0.0,0.0,"","")
 }
+@Entity(tableName = "myAlert")
+data class MyAlert(
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0,
+    var dateOfNotification: Long,
+    var event: String,
+    var startTime: Long,
+    var endTime: Long,
+    var description: String
+){
+    constructor() : this(0,0,"",0,0,"")
+}
 
 data class Minutely(
     val dt: Long,

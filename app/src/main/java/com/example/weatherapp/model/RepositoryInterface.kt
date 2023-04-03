@@ -16,4 +16,9 @@ interface RepositoryInterface {
     suspend fun insertFavLocationToDB(favoriteLocation: FavoriteLocation)
     suspend fun deleteFavLocationFromDB(favoriteLocation: FavoriteLocation)
 
+    //Alerts From Database
+    suspend fun getAllAlertsFromDB() : Flow<List<MyAlert>>
+    suspend fun insertAlertToDB(myAlert: MyAlert)
+    suspend fun deleteAlertFromDB(myAlert: MyAlert)
+
 }

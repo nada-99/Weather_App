@@ -2,6 +2,7 @@ package com.example.weatherapp.database
 
 import android.content.Context
 import com.example.weatherapp.model.FavoriteLocation
+import com.example.weatherapp.model.MyAlert
 import com.example.weatherapp.model.WeatherResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -34,6 +35,18 @@ class ConcreteLocalSource (context: Context) : LocalSource {
 
     override fun getFavLocations(): Flow<List<FavoriteLocation>> {
         return weatherDao.getFavLocations()
+    }
+
+    override suspend fun insertAlert(myAlert: MyAlert) {
+        return weatherDao.insertAlert(myAlert)
+    }
+
+    override suspend fun deleteAlert(myAlert: MyAlert) {
+        return weatherDao.deleteAlert(myAlert)
+    }
+
+    override fun getAllAlerts(): Flow<List<MyAlert>> {
+        return weatherDao.getAllAlerts()
     }
 
 }

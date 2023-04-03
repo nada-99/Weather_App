@@ -9,7 +9,7 @@
     app:cardElevation="4dp"
     app:cardMaxElevation="6dp"
     app:cardCornerRadius="10dp"
-    app:cardBackgroundColor="@color/base"
+    app:cardBackgroundColor="@color/cardBackground"
     android:id="@+id/daily_cardView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +23,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/capriola"
-            android:text="2:54 AM"
             android:textSize="18sp"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,10 +30,10 @@
 
         <ImageView
             android:id="@+id/menu_alerts_iv"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_margin="16dp"
-            android:src="@drawable/menu_dots"
+            android:src="@drawable/custom_delete_icon_fav"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -45,7 +44,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="23 Feb"
             android:fontFamily="@font/capriola"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/start_date_tv"
@@ -69,7 +67,6 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/capriola"
-            android:text="3:54 AM"
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/textView5"
             app:layout_constraintTop_toTopOf="parent" />
@@ -80,7 +77,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="23 Feb"
             android:fontFamily="@font/capriola"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/end_date_tv"

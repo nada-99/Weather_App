@@ -52,5 +52,17 @@ class Repository private constructor(
         return localSource.deleteFavLocation(favoriteLocation)
     }
 
+    override suspend fun getAllAlertsFromDB(): Flow<List<MyAlert>> {
+        return localSource.getAllAlerts()
+    }
+
+    override suspend fun insertAlertToDB(myAlert: MyAlert) {
+        return localSource.insertAlert(myAlert)
+    }
+
+    override suspend fun deleteAlertFromDB(myAlert: MyAlert) {
+        return localSource.deleteAlert(myAlert)
+    }
+
 
 }

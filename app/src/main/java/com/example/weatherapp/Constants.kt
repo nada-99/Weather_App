@@ -57,6 +57,14 @@ fun getDayFormat(timestamp: Long, language: String): String {
     return sdf.format(date)
 }
 
+fun getDateToAlert(timestamp: Long, language: String): String{
+    return SimpleDateFormat("M/d/yyyy",Locale(language)).format(timestamp)
+}
+
+fun getTimeToAlert(timestamp: Long, language: String): String{
+    return SimpleDateFormat("h:mm a",Locale(language)).format(timestamp)
+}
+
 fun getIconOfWeather(icon: String?): Int {
     var idOfIcon = 0
     when (icon) {
