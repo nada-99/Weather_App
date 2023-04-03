@@ -1,15 +1,10 @@
 package com.example.weatherapp
 
-import android.annotation.TargetApi
 import android.content.Context
-import android.content.ContextWrapper
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.location.Geocoder
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.preference.PreferenceManager
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*

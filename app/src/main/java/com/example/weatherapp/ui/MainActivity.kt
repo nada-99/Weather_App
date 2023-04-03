@@ -172,6 +172,10 @@ class MainActivity : AppCompatActivity() {
                 val country = addresses[0].countryName
                 address = country+ "/"+ city
 
+//                GlobalScope.launch(Dispatchers.Main) {
+//                    AlertWindow(appContext, desc, alert.AlertCityName).onCreate()
+//                }
+
                 sharedPreference.edit().putString(Constants.lat, lat.toString()).apply()
                 sharedPreference.edit().putString(Constants.long, long.toString()).apply()
                 sharedPreference.edit().putString(Constants.address, address).apply()

@@ -86,4 +86,7 @@ dependencies {
     //Google Map
     implementation'com.google.android.gms:play-services-location:17.1.0'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
+    // Work Manager + coroutines
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
 }

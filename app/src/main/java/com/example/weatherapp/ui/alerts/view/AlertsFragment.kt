@@ -1,6 +1,9 @@
 package com.example.weatherapp.ui.alerts.view
 
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,8 +24,10 @@ import com.example.weatherapp.model.MyAlert
 import com.example.weatherapp.model.Repository
 import com.example.weatherapp.model.ResponseState
 import com.example.weatherapp.network.WeatherClient
+import com.example.weatherapp.ui.MainActivity
 import com.example.weatherapp.ui.alerts.viewmodel.AlertViewModel
 import com.example.weatherapp.ui.alerts.viewmodel.AlertViewModelFactory
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -52,6 +57,7 @@ class AlertsFragment : Fragment() , OnClickAlert{
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentAlertsBinding.inflate(inflater, container, false)
+        checkOverlayPermission()
         return binding.root
     }
 
@@ -111,6 +117,24 @@ class AlertsFragment : Fragment() , OnClickAlert{
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+    }
+
+    private fun checkOverlayPermission() {
+        if (!Settings.canDrawOverlays(requireContext())) {
+            val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
+            alertDialogBuilder.setTitle(getString(R.string.weatherAlerts))
+                .setMessage(getString(R.string.features))
+                .setPositiveButton(getString(R.string.ok)) { dialog: DialogInterface, i: Int ->
+                    var myIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                    startActivity(myIntent)
+                    dialog.dismiss()
+                }.setNegativeButton(
+                    getString(R.string.cancel)
+                ) { dialog: DialogInterface, i: Int ->
+                    dialog.dismiss()
+                    startActivity(Intent(requireContext(),MainActivity::class.java))
+                }.show()
+        }
     }
 }
 

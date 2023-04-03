@@ -32,14 +32,13 @@ class AlertAdapter(private var alertsList: List<MyAlert>, var myListener: OnClic
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentAlert = alertsList[position]
-        holder.binding.startDateTv.text = getTimeToAlert(currentAlert.startTime,languageFromSP)
+        holder.binding.startDateTv.text = getTimeToAlert(currentAlert.dateOfNotification,languageFromSP)
         holder.binding.dateStartTv.text = getDateToAlert(currentAlert.startTime,languageFromSP)
-        holder.binding.endDateTv.text = getTimeToAlert(currentAlert.endTime,languageFromSP)
+        holder.binding.endDateTv.text = getTimeToAlert(currentAlert.dateOfNotification,languageFromSP)
         holder.binding.dateEndTv.text = getDateToAlert(currentAlert.endTime,languageFromSP)
         holder.binding.menuAlertsIv.setOnClickListener {
             myListener.onClickDelete(currentAlert)
         }
-
     }
 
     override fun getItemCount(): Int = alertsList.size
