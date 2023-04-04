@@ -39,9 +39,6 @@ class DailyAdapter(private var dailyList: List<Daily>, val context: Context) :
         } else {
             holder.binding.maxMinTempTv.text =
                 "${currentDay.temp.max.toInt()}/${currentDay.temp.min.toInt()} ${getUnit(tempUnit,languageFromSP)}"
-//            holder.binding.maxMinTempTv.text =
-//                currentDay.temp.max.toInt().toString() + "/" + currentDay.temp.min.toInt()
-//                    .toString()
         }
     }
 

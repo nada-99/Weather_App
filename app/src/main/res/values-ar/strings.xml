@@ -44,4 +44,12 @@
     <string name="delete_qustion">هل انت متأكد من حذف هذا الموقع؟</string>
     <string name="notValidMap">يجب تحديد مكان قبل الحفظ او لا يستطيع التعرف على المكان</string>
     <string name="m">م</string>
+
+    <string name="from">من</string>
+    <string name="to">الى</string>
+    <string name="setup_alert">اعدات الانذار</string>
+    <string name="endTimeAlert">تاريخ الانتهاء يجب ان يكون بعد تاريخ البدء</string>
+    <string name="noAlerts">الطقس مستقر لا يوجد تنيهات اليوم</string>
+    <string name="weatherAlerts">تنبيهات الطقس</string>
+    <string name="features">ميزه</string>
 </resources>

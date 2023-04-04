@@ -28,6 +28,13 @@ class Repository private constructor(
         return flowOf(remoteSource.getWeatherFromApi(latitude, longitude, lang, units))
     }
 
+/*    suspend fun getWeatherResponseFromApiToWorker(latitude: Double, longitude: Double): WeatherResponse {
+        val sharedPreference = context.getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
+        var lang = sharedPreference.getString(Constants.language, "")!!
+        var units = sharedPreference.getString(Constants.unit, "")!!
+        return remoteSource.getWeatherFromApi(latitude, longitude, lang, units)
+    }*/
+
     override suspend fun getCurrentWeatherFromDB(): Flow<WeatherResponse> {
         return localSource.getCurrentWeather()
     }
@@ -50,6 +57,18 @@ class Repository private constructor(
 
     override suspend fun deleteFavLocationFromDB(favoriteLocation: FavoriteLocation) {
         return localSource.deleteFavLocation(favoriteLocation)
+    }
+
+    override suspend fun getAllAlertsFromDB(): Flow<List<MyAlert>> {
+        return localSource.getAllAlerts()
+    }
+
+    override suspend fun insertAlertToDB(myAlert: MyAlert) {
+        return localSource.insertAlert(myAlert)
+    }
+
+    override suspend fun deleteAlertFromDB(myAlert: MyAlert) {
+        return localSource.deleteAlert(myAlert)
     }
 
 

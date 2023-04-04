@@ -1,15 +1,10 @@
 package com.example.weatherapp
 
-import android.annotation.TargetApi
 import android.content.Context
-import android.content.ContextWrapper
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.location.Geocoder
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.preference.PreferenceManager
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,6 +50,14 @@ fun getDayFormat(timestamp: Long, language: String): String {
     val sdf = SimpleDateFormat("EE", Locale(language))
     val date = Date(timestamp * 1000L)
     return sdf.format(date)
+}
+
+fun getDateToAlert(timestamp: Long, language: String): String{
+    return SimpleDateFormat("M/d/yyyy",Locale(language)).format(timestamp)
+}
+
+fun getTimeToAlert(timestamp: Long, language: String): String{
+    return SimpleDateFormat("h:mm a",Locale(language)).format(timestamp)
 }
 
 fun getIconOfWeather(icon: String?): Int {

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_gradient">
+    android:background="@drawable/alert_card_background">
 
 
     <ImageView
@@ -110,6 +110,8 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="16dp"
         android:text="@string/save_btn"
+        android:minHeight="10dp"
+        android:background="@drawable/alert_card_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

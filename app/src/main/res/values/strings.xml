@@ -43,5 +43,15 @@
     <string name="delete_qustion">Are you sure you want to delete this item?</string>
     <string name="notValidMap">you must select a place or it can not locate</string>
     <string name="m">m</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="setup_alert">Setup Alert</string>
+    <string name="endTimeAlert">End date must be after start date</string>
+    <string name="weatherAlerts">Weather Alert</string>
+    <string name="features">features</string>
+
+    <string name="noAlerts">Weather is fine, there is no alerts.</string>
+    <string name="weather_alert">Weather Alert</string>
+    <string name="dismiss">Dismiss</string>
 
 </resources>
