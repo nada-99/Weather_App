@@ -28,12 +28,6 @@ class Repository private constructor(
         return flowOf(remoteSource.getWeatherFromApi(latitude, longitude, lang, units))
     }
 
-/*    suspend fun getWeatherResponseFromApiToWorker(latitude: Double, longitude: Double): WeatherResponse {
-        val sharedPreference = context.getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
-        var lang = sharedPreference.getString(Constants.language, "")!!
-        var units = sharedPreference.getString(Constants.unit, "")!!
-        return remoteSource.getWeatherFromApi(latitude, longitude, lang, units)
-    }*/
 
     override suspend fun getCurrentWeatherFromDB(): Flow<WeatherResponse> {
         return localSource.getCurrentWeather()
