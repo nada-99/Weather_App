@@ -157,7 +157,6 @@ class SelectTimeDialog : DialogFragment() {
         }
     }
 
-    // Extension function to convert a date to a long value
     fun Long.dateToLong(): Long {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = this

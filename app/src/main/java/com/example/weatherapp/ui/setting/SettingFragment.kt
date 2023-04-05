@@ -16,7 +16,9 @@ import androidx.navigation.Navigation.findNavController
 import com.example.weatherapp.Constants
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentSettingBinding
+import com.example.weatherapp.isInternetConnected
 import com.example.weatherapp.ui.MainActivity
+import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
 class SettingFragment : Fragment() {
@@ -56,6 +58,7 @@ class SettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val rootView = requireActivity().findViewById<View>(android.R.id.content)
 
         var context: Context
         var resources: Resources
@@ -73,15 +76,25 @@ class SettingFragment : Fragment() {
                     sharedPreference.edit()
                         .putString(Constants.LocationFrom, Constants.Loction_Enum.gps.toString())
                         .commit()
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
+                    if(isInternetConnected(requireContext())){
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        startActivity(intent)
+                    }else{
+                        Snackbar.make(rootView, getString(R.string.checkInternet), Snackbar.LENGTH_LONG).show()
+                    }
+
 
                 }
                 getString(R.string.map) -> {
                     sharedPreference.edit()
                         .putString(Constants.LocationFrom, Constants.Loction_Enum.map.toString())
                         .commit()
-                    Navigation.findNavController(view).navigate(R.id.action_settingFragment_to_mapOrGpsFragment3)
+                    if(isInternetConnected(requireContext())){
+                        Navigation.findNavController(view).navigate(R.id.action_settingFragment_to_mapOrGpsFragment3)
+                    }else{
+                        Snackbar.make(rootView, getString(R.string.checkInternet), Snackbar.LENGTH_LONG).show()
+                    }
+
                 }
             }
         }

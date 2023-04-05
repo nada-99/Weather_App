@@ -15,19 +15,20 @@ import com.example.weatherapp.databinding.AlertAlarmBinding
 class AlertAlarm (private val context: Context, private val description: String) {
 
     lateinit var binding: AlertAlarmBinding
-    private lateinit var customDialog: View
-    private var mediaPlayer: MediaPlayer =  MediaPlayer.create(context, R.raw.weatheralert)
+    private lateinit var alarmDialog: View
+
+    private var mediaPlayer: MediaPlayer =  MediaPlayer.create(context, R.raw.alarm_weather)
 
     fun onCreate() {
-        mediaPlayer.start()// no need to call prepare(); create() does that for you
+        mediaPlayer.start()
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        customDialog = inflater.inflate(R.layout.alert_alarm, null)
-        binding = AlertAlarmBinding.bind(customDialog)
+        alarmDialog = inflater.inflate(R.layout.alert_alarm, null)
+        binding = AlertAlarmBinding.bind(alarmDialog)
         initView()
         val LAYOUT_FLAG: Int = Flag()
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val layoutParams: WindowManager.LayoutParams = Params(LAYOUT_FLAG)
-        windowManager.addView(customDialog, layoutParams)
+        windowManager.addView(alarmDialog, layoutParams)
 
     }
 
@@ -54,7 +55,6 @@ class AlertAlarm (private val context: Context, private val description: String)
     }
 
     private fun initView() {
-        // binding.img.setImageResource(R.drawable.ic_broken_cloud)
         binding.alertDescTv.text = description
         binding.dismissBtn.setOnClickListener {
             close()
@@ -64,10 +64,10 @@ class AlertAlarm (private val context: Context, private val description: String)
     private fun close() {
         try {
             (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).removeView(
-                customDialog
+                alarmDialog
             )
-            customDialog.invalidate()
-            (customDialog.parent as ViewGroup).removeAllViews()
+            alarmDialog.invalidate()
+            (alarmDialog.parent as ViewGroup).removeAllViews()
         } catch (e: Exception) {
             Log.d("Error", e.toString())
         }
