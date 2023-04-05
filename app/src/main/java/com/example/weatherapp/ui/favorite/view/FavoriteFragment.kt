@@ -25,6 +25,7 @@ import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.favorite.viewmodel.FavViewModel
 import com.example.weatherapp.ui.favorite.viewmodel.FavViewModelFactory
 import com.example.weatherapp.ui.home.view.DailyAdapter
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -59,6 +60,7 @@ class FavoriteFragment : Fragment() , OnClickFavorite{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val rootView = requireActivity().findViewById<View>(android.R.id.content)
 
         favAdapter = FavAdapter(ArrayList(),this, requireActivity())
         val layoutManager =
@@ -102,7 +104,7 @@ class FavoriteFragment : Fragment() , OnClickFavorite{
             if(isInternetConnected(requireContext())){
                 Navigation.findNavController(view).navigate(R.id.action_favoriteFragment_to_mapFragment)
             }else{
-                Toast.makeText(requireContext(), "Check your internet", Toast.LENGTH_LONG).show()
+                Snackbar.make(rootView, getString(R.string.checkInternet), Snackbar.LENGTH_LONG).show()
             }
         }
     }

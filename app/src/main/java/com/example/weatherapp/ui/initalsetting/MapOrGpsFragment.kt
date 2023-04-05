@@ -12,9 +12,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation
 import com.example.weatherapp.Constants
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentMapOrGpsBinding
+import com.example.weatherapp.getAddressGeoCoder
 import com.example.weatherapp.ui.MainActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -70,21 +72,37 @@ class MapOrGpsFragment : Fragment() {
 
                     mapSharedPreferences.edit().putString(Constants.lat, it.latitude.toString()).apply()
                     mapSharedPreferences.edit().putString(Constants.long, it.longitude.toString()).apply()
+                    mapSharedPreferences.edit().putString(Constants.latMap, it.latitude.toString()).apply()
+                    mapSharedPreferences.edit().putString(Constants.longMap, it.longitude.toString()).apply()
+                    var language = mapSharedPreferences.getString(Constants.language,"")
+
 
                     Log.i("Lat&Long Fav", "onMapClick: ${it.latitude} , ${it.longitude}")
 
-                    val addresses = geoCoder.getFromLocation(it.latitude, it.longitude, 1)
-                    val city = addresses!![0].locality
+                    val addresses = getAddressGeoCoder(it.latitude,it.longitude,requireContext(),language!!)
+//                    val city = addresses!![0].locality
 
-
-                    if(city == null) {
-                        Toast.makeText(requireContext(), "i can't found city", Toast.LENGTH_LONG)
-                            .show()
-                    }
+//
+//                    if(addresses != null || addresses != "") {
+//                        Toast.makeText(requireContext(), "i can't found city", Toast.LENGTH_LONG)
+//                            .show()
+//                    }
 
                     binding.addToFavBtn.setOnClickListener {
-                        val intent = Intent(requireContext(), MainActivity::class.java)
-                        startActivity(intent)
+                        if (addresses != null || addresses != "") {
+                            val intent = Intent(requireContext(), MainActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.notValidMap),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+
+                    binding.cancelButton.setOnClickListener {
+                        getActivity()?.onBackPressed()
                     }
                 }
             }

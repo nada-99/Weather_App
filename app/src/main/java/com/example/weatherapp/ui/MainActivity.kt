@@ -14,23 +14,37 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.example.weatherapp.Constants
 import com.example.weatherapp.R
+import com.example.weatherapp.database.ConcreteLocalSource
+import com.example.weatherapp.isInternetConnected
+import com.example.weatherapp.model.Repository
+import com.example.weatherapp.model.ResponseState
+import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.home.view.PERMISSION_ID
+import com.example.weatherapp.ui.home.viewmodel.HomeViewModel
+import com.example.weatherapp.ui.home.viewmodel.HomeViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 
@@ -42,22 +56,37 @@ class MainActivity : AppCompatActivity() {
     var lat: Double = 0.0
     var long: Double = 0.0
     lateinit var mFusedLocationClient: FusedLocationProviderClient
-    lateinit var geoCoder: Geocoder
     lateinit var sharedPreference: SharedPreferences
-    lateinit var address: String
+    lateinit var myFactory: HomeViewModelFactory
+    lateinit var viewModel: HomeViewModel
+    lateinit var locationSharedPreference:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //GPs
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        geoCoder = Geocoder(this, Locale.getDefault())
-        getLastLocation()
-
         sharedPreference =
             applicationContext.getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
+        locationSharedPreference = sharedPreference.getString(Constants.LocationFrom,"")!!
 
+        //GPs
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        myFactory = HomeViewModelFactory(
+            Repository.getInstance(
+                WeatherClient.getInstance(),
+                ConcreteLocalSource(this),
+                this
+            )
+        )
+        viewModel = ViewModelProvider(this, myFactory).get(HomeViewModel::class.java)
+
+        if(isInternetConnected(this) && locationSharedPreference == Constants.Loction_Enum.gps.toString()){
+            getLastLocation()
+//            GlobalScope.launch(Dispatchers.Main) {
+//                getLastLocation()
+//            }
+        }
         //setup navigation drawer
         getSupportActionBar()?.setElevation(0F)
         getSupportActionBar()?.setDisplayShowTitleEnabled(false)
@@ -89,9 +118,10 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (checkPermissions())
-            getLastLocation()
+            if(isInternetConnected(this)&& locationSharedPreference == Constants.Loction_Enum.gps.toString()){
+                getLastLocation()
+            }
     }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -167,18 +197,30 @@ class MainActivity : AppCompatActivity() {
                 long = mLastLocation.longitude
                 Log.i("Lat & Long", "Lat & Long : $lat, $long")
 
-                val addresses = geoCoder.getFromLocation(mLastLocation!!.getLatitude(), mLastLocation!!.getLongitude(), 1)
-                val city = addresses!![0].locality
-                val country = addresses[0].countryName
-                address = country+ "/"+ city
-
-//                GlobalScope.launch(Dispatchers.Main) {
-//                    AlertWindow(appContext, desc, alert.AlertCityName).onCreate()
-//                }
-
                 sharedPreference.edit().putString(Constants.lat, lat.toString()).apply()
                 sharedPreference.edit().putString(Constants.long, long.toString()).apply()
-                sharedPreference.edit().putString(Constants.address, address).apply()
+
+/*                lifecycleScope.launch {
+                    sharedPreference.edit().putString(Constants.lat, lat.toString()).apply()
+                    sharedPreference.edit().putString(Constants.long, long.toString()).apply()
+//                    sharedPreference.edit().putString(Constants.address, address).apply()
+                    viewModel.weatherData.collectLatest { result ->
+                        when (result) {
+                            is ResponseState.Loading -> {
+                                Log.i("LOADING", "LOADING: ")
+                            }
+                            is ResponseState.Success -> {
+                                viewModel.deleteCurrentWeatherFromDB()
+                                viewModel.insertCurrentWeatherToDB(result.data)
+                                Log.i("DATAAAA", "${result.data.current.temp}")
+                            }
+                            else -> {
+                                Log.i("ERRRRORR", "ERRRRORR: ")
+                            }
+                        }
+                    }
+                }*/
+
             }
 
             mFusedLocationClient.removeLocationUpdates(this)

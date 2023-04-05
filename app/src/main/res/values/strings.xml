@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weather App</string>
+    <string name="app_name">Weather</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="favorites_header">Favorites</string>
@@ -48,9 +48,10 @@
     <string name="setup_alert">Setup Alert</string>
     <string name="endTimeAlert">End date must be after start date</string>
     <string name="weatherAlerts">Weather Alert</string>
-    <string name="features">features</string>
+    <string name="features">If you want to show alarm of alerts, you must turn on permission to show</string>
 
     <string name="noAlerts">Weather is fine, there is no alerts.</string>
+    <string name="checkInternet">Check your internet connection</string>
     <string name="weather_alert">Weather Alert</string>
     <string name="dismiss">Dismiss</string>
 

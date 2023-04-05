@@ -29,8 +29,10 @@ import androidx.navigation.Navigation
 import com.example.weatherapp.Constants
 import com.example.weatherapp.R
 import com.example.weatherapp.database.ConcreteLocalSource
+import com.example.weatherapp.isInternetConnected
 import com.example.weatherapp.model.APIState
 import com.example.weatherapp.model.Repository
+import com.example.weatherapp.model.ResponseState
 import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.MainActivity
 import com.example.weatherapp.ui.home.view.PERMISSION_ID
@@ -40,13 +42,13 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import java.util.*
 
 class InitSettingFragment : Fragment() {
 
     lateinit var mFusedLocationClient: FusedLocationProviderClient
-    lateinit var geoCoder: Geocoder
     lateinit var sharedPreference: SharedPreferences
     var lat: Double = 0.0
     var long: Double = 0.0
@@ -74,6 +76,7 @@ class InitSettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val rootView = requireActivity().findViewById<View>(android.R.id.content)
 
         myFactory = HomeViewModelFactory(
             Repository.getInstance(
@@ -85,7 +88,6 @@ class InitSettingFragment : Fragment() {
         viewModel = ViewModelProvider(this, myFactory).get(HomeViewModel::class.java)
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        geoCoder = Geocoder(requireContext(), Locale.getDefault())
         sharedPreference =
             requireActivity().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
 
@@ -130,7 +132,12 @@ class InitSettingFragment : Fragment() {
                 Toast.makeText(context, "Please select initial setting", Toast.LENGTH_SHORT).show()
             }
         }
-        dialog.show()
+        if(isInternetConnected(requireContext())){
+            dialog.show()
+        }else{
+            Snackbar.make(rootView, getString(R.string.checkInternet), Snackbar.LENGTH_LONG).show()
+        }
+
 
     }
 
@@ -216,15 +223,17 @@ class InitSettingFragment : Fragment() {
                 long = mLastLocation.longitude
                 Log.i("Lat & Long", "Lat & Long : $lat, $long")
 
-/*                viewModel.getWeatherData(lat!!, long!!)
+                viewModel.getWeatherData(lat!!, long!!)
 
                 lifecycleScope.launch {
+                    sharedPreference.edit().putString(Constants.lat, lat.toString()).apply()
+                    sharedPreference.edit().putString(Constants.long, long.toString()).apply()
                     viewModel.weatherData.collect { result ->
                         when (result) {
-                            is APIState.Loading -> {
+                            is ResponseState.Loading -> {
                                 Log.i("LOADING", "LOADING: ")
                             }
-                            is APIState.Success -> {
+                            is ResponseState.Success -> {
                                 viewModel.insertCurrentWeatherToDB(result.data)
                                 Log.i("DATAAAA", "${result.data.current.temp}")
                             }
@@ -233,10 +242,8 @@ class InitSettingFragment : Fragment() {
                             }
                         }
                     }
-                }*/
+                }
 
-                sharedPreference.edit().putString(Constants.lat, lat.toString()).apply()
-                sharedPreference.edit().putString(Constants.long, long.toString()).apply()
             }
             mFusedLocationClient.removeLocationUpdates(this)
         }

@@ -25,12 +25,13 @@ object Constants {
     const val address = "address"
     const val LocationFrom = "locationFrom"
     const val notification = "notification"
+    const val latMap = "latMap"
+    const val longMap = "longMap"
 
     enum class Loction_Enum() { map, gps }
     enum class Language_Enum() { en, ar }
     enum class Units_Enum() { standard, metric, imperial }
     enum class WindSpeed_Enum() { meter,mile }
-
     enum class notification_Enum() { enable,disable }
 }
 

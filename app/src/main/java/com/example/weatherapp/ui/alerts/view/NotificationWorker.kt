@@ -38,7 +38,8 @@ import kotlinx.coroutines.runBlocking
 
 const val CHANNEL_ID = "channelID"
 
-class NotificationWorker (private var context: Context, workerParams: WorkerParameters) : CoroutineWorker(context, workerParams) {
+class NotificationWorker(private var context: Context, workerParams: WorkerParameters) :
+    CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
         val sharedPreference =
@@ -51,37 +52,32 @@ class NotificationWorker (private var context: Context, workerParams: WorkerPara
         val client: WeatherClient = WeatherClient.getInstance()
         var weatherResponse: WeatherResponse
         runBlocking {
-            weatherResponse = client.getWeatherFromApi(lat!!, long!!,language,Constants.API_KEY)
+            weatherResponse = client.getWeatherFromApi(lat!!, long!!, language, Constants.API_KEY)
         }
 
         Log.i("DATAAAA", "${weatherResponse.timezone}")
 
         val alertString = inputData.getString("alert")
-        var alert=  Gson().fromJson(alertString, MyAlert::class.java)
+        var alert = Gson().fromJson(alertString, MyAlert::class.java)
         val currentTime = System.currentTimeMillis().div(1000)
 
         Log.i("DATAAAA", "${weatherResponse.timezone}")
 //        if(currentTime >= alert.startTime && currentTime <= alert.endTime) {
 
         var desc = ""
-        if(weatherResponse.alerts.isEmpty()){
+        if (weatherResponse.alerts.isEmpty()) {
             desc = context.getString(R.string.noAlerts)
-        }else{
+        } else {
             desc = weatherResponse.alerts.get(0).description
         }
-        if (notifSharedPreferences == Constants.notification_Enum.disable.toString() ) {
+        if (notifSharedPreferences == Constants.notification_Enum.enable.toString()) {
             showNotification(weatherResponse.timezone, "$desc")
             GlobalScope.launch(Dispatchers.Main) {
                 AlertAlarm(context, desc).onCreate()
             }
         }
         Log.i("DATAAAADDD", "${desc}")
-//            else {
-////                GlobalScope.launch(Dispatchers.Main) {
-////                    AlertWindow(context, desc, alert.AlertCityName).onCreate()
-////                }
-//            }
-            return Result.success()
+        return Result.success()
 //        }
 //        else if(currentTime > alert.endTime){
 //                var weatherDataBase = WeatherDataBase.getInstance(context)
@@ -98,7 +94,7 @@ class NotificationWorker (private var context: Context, workerParams: WorkerPara
     }
 
 
-    private fun showNotification(title:String,desc:String) {
+    private fun showNotification(title: String, desc: String) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "channel_name"
@@ -107,7 +103,7 @@ class NotificationWorker (private var context: Context, workerParams: WorkerPara
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
-            val notificationManager: NotificationManager =applicationContext
+            val notificationManager: NotificationManager = applicationContext
                 .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
