@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SmallTest
 import com.example.weatherapp.RoomMainRule
 import com.example.weatherapp.database.WeatherDao
 import com.example.weatherapp.database.WeatherDataBase
@@ -21,6 +22,7 @@ import org.junit.runner.RunWith
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
+@SmallTest
 class WeatherDaoTest {
 
     lateinit var database : WeatherDataBase

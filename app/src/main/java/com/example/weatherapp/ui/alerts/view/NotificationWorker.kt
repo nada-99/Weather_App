@@ -128,34 +128,6 @@ class NotificationWorker(private var context: Context, workerParams: WorkerParam
             //WorkManager.getInstance(context).cancelAllWorkByTag(alert.startTime.toString()+alert.endTime.toString())
             return Result.failure()
         }
-
-//        if (currentTime >= alert.startTime && currentTime <= alert.endTime) {
-//            var desc = ""
-//            if (weatherResponse.alerts.isEmpty()) {
-//                desc = context.getString(R.string.noAlerts)
-//            } else {
-//                desc = weatherResponse.alerts.get(0).description
-//            }
-//            if (notifSharedPreferences == Constants.notification_Enum.enable.toString()) {
-//                showNotification(weatherResponse.timezone, "$desc")
-//                GlobalScope.launch(Dispatchers.Main) {
-//                    AlertAlarm(context, desc).onCreate()
-//                }
-//            }
-//            Log.i("DATAAAADDD", "${desc}")
-//            return Result.success()
-//        } else if (currentTime > alert.dateOfNotification) {
-////            viewModel.deleteAlertFromDB(alert)
-////            var localSource = ConcreteLocalSource(context)
-////            GlobalScope.launch(Dispatchers.Main) {
-////                localSource.deleteAlert(alert)
-////            }
-//            WorkManager.getInstance(context)
-//                .cancelAllWorkByTag(alert.startTime.toString() + alert.endTime.toString())
-//            return Result.success()
-//        } else {
-//            return Result.failure()
-//        }
     }
 
 
