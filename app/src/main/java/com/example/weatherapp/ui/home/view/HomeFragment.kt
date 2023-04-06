@@ -93,7 +93,7 @@ class HomeFragment : Fragment() {
             }else{
                 lat = sharedPreference.getString(Constants.latMap, "")?.toDoubleOrNull()
                 long = sharedPreference.getString(Constants.longMap, "")?.toDoubleOrNull()
-                Log.i("GPPPPPPS", "$lat , $long")
+                Log.i("Mappppppppp", "$lat , $long")
             }
         }
 
@@ -123,10 +123,10 @@ class HomeFragment : Fragment() {
                            }
                            is ResponseState.Success -> {
                                binding.progressBar.visibility = View.GONE
-                               fitWeatherDataToUi(result.data)
-                               viewModel.deleteCurrentWeatherFromDB()
+                               result.data.address = getAddressGeoCoder(lat,long,requireContext(),languageFromSP)
                                viewModel.insertCurrentWeatherToDB(result.data)
-                               Log.i("DATAAAA", "${result.data.current.temp}")
+                               fitWeatherDataToUi(result.data)
+                               Log.i("DATAAAAInternet", "${result.data.address}")
                            }
                            else -> {
                                binding.progressBar.visibility = View.GONE
@@ -137,14 +137,13 @@ class HomeFragment : Fragment() {
                }
            }
 
-        } else {
+        }
+        else {
             Log.i("DataBassse", "hiiiiiiii")
             //call DataBase
             viewModel.getCurrentWeather()
             Snackbar.make(rootView, getString(R.string.checkInternet), Snackbar.LENGTH_LONG).show()
 
-//            Toast.makeText(context, "Please Check your internet connection", Toast.LENGTH_SHORT)
-//                .show()
             lifecycleScope.launch {
                 viewModel.weatherData.collectLatest { result ->
                     when (result) {
@@ -155,7 +154,7 @@ class HomeFragment : Fragment() {
                         is ResponseState.Success -> {
                             binding.progressBar.visibility = View.GONE
                             fitWeatherDataToUi(result.data)
-                            Log.i("DATAAAA", "${result.data.current.temp}")
+                            Log.i("DATAAAA", "${result.data.address}")
                         }
                         else -> {
                             binding.progressBar.visibility = View.GONE
@@ -166,18 +165,11 @@ class HomeFragment : Fragment() {
             }
         }
 
-        Log.i("LLLat", "$lat + $long")
-
-//        if (lat != null && long != null) {
-//            viewModel.getWeatherData(lat!!, long!!)
-//        }
-
-
     }
 
     fun fitWeatherDataToUi(weatherDetails: WeatherResponse) {
         //first part
-        binding.cityTv.text = getAddressGeoCoder(lat,long,requireContext(),languageFromSP)
+        binding.cityTv.text = weatherDetails.address
         binding.dateTv.text = getFormattedDate(weatherDetails.current.dt,languageFromSP)
         if(languageFromSP == "ar"){
             binding.tempTv.text = "${convertToArabicNumber(weatherDetails.current.temp.toInt())} ${getUnit(tempUnit,languageFromSP)}"
@@ -185,7 +177,7 @@ class HomeFragment : Fragment() {
             binding.pressureTv.text = convertToArabicNumber(weatherDetails.current.pressure)
             binding.humidityTv.text = convertToArabicNumber(weatherDetails.current.humidity) +"%"
 //            binding.windTv.text = convertToArabicNumber((getWindSpeed(windUnit , tempUnit ,weatherDetails.current.windSpeed,requireContext())).toInt())
-            binding.windTv.text = convertToArabicNumber(weatherDetails.current.windSpeed.toInt()) + getCurrentSpeed(requireContext())
+            binding.windTv.text = convertToArabicNumber(weatherDetails.current.windSpeed.toBigDecimal().setScale(2, RoundingMode.UP).toInt())+ getWindSpeed(windUnit,requireContext())
             binding.cloudTv.text = convertToArabicNumber(weatherDetails.current.clouds)+"%"
             binding.ultravioletTv.text = convertToArabicNumber(weatherDetails.current.uvi.toInt())
             binding.visibilityTv.text = convertToArabicNumber(weatherDetails.current.visibility)+ getString(R.string.m)
@@ -194,8 +186,8 @@ class HomeFragment : Fragment() {
             //last part
             binding.pressureTv.text = weatherDetails.current.pressure.toString()
             binding.humidityTv.text = weatherDetails.current.humidity.toString() +"%"
-//            binding.windTv.text = getWindSpeed(windUnit , tempUnit ,weatherDetails.current.windSpeed,requireContext())
-            binding.windTv.text = weatherDetails.current.windSpeed.toBigDecimal().setScale(2, RoundingMode.UP).toString()+ getCurrentSpeed(requireContext())
+            //binding.windTv.text = getWindSpeed(windUnit , tempUnit ,weatherDetails.current.windSpeed,requireContext())
+            binding.windTv.text = weatherDetails.current.windSpeed.toBigDecimal().setScale(2, RoundingMode.UP).toString()+ getWindSpeed(windUnit,requireContext())
             binding.cloudTv.text = weatherDetails.current.clouds.toString()+"%"
             binding.ultravioletTv.text = weatherDetails.current.uvi.toString()
             binding.visibilityTv.text = weatherDetails.current.visibility.toString()+ getString(R.string.m)

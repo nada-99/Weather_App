@@ -1,6 +1,5 @@
 package com.example.weatherapp.ui.alerts.view
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -9,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -41,16 +39,6 @@ class AlertsFragment : Fragment() , OnClickAlert{
     lateinit var alertAdapter: AlertAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
     override fun onCreateView(
@@ -101,11 +89,6 @@ class AlertsFragment : Fragment() , OnClickAlert{
                 }
             }
         }
-
-        binding.backAlerts.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.action_alertsFragment_to_homeFragment)
-        }
-
         binding.alertsFab.setOnClickListener {
             if(isInternetConnected(requireContext())){
                 SelectTimeDialog().show(requireActivity().supportFragmentManager, "Hi Alert Diaolg")
