@@ -76,12 +76,19 @@ class FavoriteFragment : Fragment(), OnClickFavorite {
                         Log.i("LOADING", "LOADING: ")
                     }
                     is ResponseState.Success -> {
-                        binding.favIconIv.visibility = View.GONE
-                        binding.addPlacesTv.visibility = View.GONE
-                        favAdapter.setListFav(result.data)
-                        favAdapter.notifyDataSetChanged()
-                        binding.favRecyclerview.adapter = favAdapter
-                        Log.i("LOADINGFavv", "LOADING: ${result.data} ")
+                        if(result.data.isNullOrEmpty()){
+                            binding.favIconIv.visibility = View.VISIBLE
+                            binding.addPlacesTv.visibility = View.VISIBLE
+                            binding.favRecyclerview.visibility = View.GONE
+                        }else{
+                            binding.favRecyclerview.visibility = View.VISIBLE
+                            binding.favIconIv.visibility = View.GONE
+                            binding.addPlacesTv.visibility = View.GONE
+                            favAdapter.setListFav(result.data)
+                            favAdapter.notifyDataSetChanged()
+                            binding.favRecyclerview.adapter = favAdapter
+                            Log.i("LOADINGFavv", "LOADING: ${result.data} ")
+                        }
                     }
                     else -> {
                         Log.i("ERRRRORR", "ERRRRORR: ")

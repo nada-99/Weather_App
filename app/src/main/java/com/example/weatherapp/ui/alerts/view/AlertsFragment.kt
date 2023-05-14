@@ -76,12 +76,19 @@ class AlertsFragment : Fragment() , OnClickAlert{
                         Log.i("LOADING", "LOADING: ")
                     }
                     is ResponseState.Success -> {
-                        binding.alertIconIv.visibility = View.GONE
-                        binding.addPlacesTv.visibility = View.GONE
-                        alertAdapter.setListAlerts(result.data)
-                        alertAdapter.notifyDataSetChanged()
-                        binding.alertsRecyclerview.adapter = alertAdapter
-                        Log.i("LOADINGFavv", "LOADING: ${result.data} ")
+                        if(result.data.isNullOrEmpty()){
+                            binding.alertIconIv.visibility = View.VISIBLE
+                            binding.addPlacesTv.visibility = View.VISIBLE
+                            binding.alertsRecyclerview.visibility = View.GONE
+                        }else{
+                            binding.alertsRecyclerview.visibility = View.VISIBLE
+                            binding.alertIconIv.visibility = View.GONE
+                            binding.addPlacesTv.visibility = View.GONE
+                            alertAdapter.setListAlerts(result.data)
+                            alertAdapter.notifyDataSetChanged()
+                            binding.alertsRecyclerview.adapter = alertAdapter
+                            Log.i("LOADINGFavv", "LOADING: ${result.data} ")
+                        }
                     }
                     else -> {
                         Log.i("ERRRRORR", "ERRRRORR: ")
