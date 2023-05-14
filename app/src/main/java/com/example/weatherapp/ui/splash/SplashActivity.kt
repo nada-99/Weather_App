@@ -35,6 +35,7 @@ class SplashActivity : AppCompatActivity() {
                 editor.putString(Constants.language, Constants.Language_Enum.en.toString())
                 editor.putString(Constants.unit, Constants.Units_Enum.metric.toString())
                 editor.putString(Constants.windSpeed, Constants.WindSpeed_Enum.meter.toString())
+                editor.putString(Constants.addressCountry, "")
                 editor.commit()
                 val intent = Intent(this, InitSettingActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK

@@ -9,14 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import androidx.navigation.Navigation.findNavController
 import com.example.weatherapp.Constants
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentSettingBinding
+import com.example.weatherapp.isInternetConnected
 import com.example.weatherapp.ui.MainActivity
+import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
 class SettingFragment : Fragment() {
@@ -35,16 +35,6 @@ class SettingFragment : Fragment() {
             requireActivity().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
     }
 
-    override fun onResume() {
-        super.onResume()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,15 +46,12 @@ class SettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val rootView = requireActivity().findViewById<View>(android.R.id.content)
 
         var context: Context
         var resources: Resources
 
         checkRadioButton()
-
-        binding.backSetting.setOnClickListener {
-            findNavController(view).navigate(R.id.action_settingFragment_to_homeFragment)
-        }
 
         binding.locationRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             locationRadioButton = view.findViewById<View>(checkedId) as RadioButton
@@ -73,15 +60,25 @@ class SettingFragment : Fragment() {
                     sharedPreference.edit()
                         .putString(Constants.LocationFrom, Constants.Loction_Enum.gps.toString())
                         .commit()
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
+                    if(isInternetConnected(requireContext())){
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        startActivity(intent)
+                    }else{
+                        Snackbar.make(rootView, getString(R.string.checkInternet), Snackbar.LENGTH_LONG).show()
+                    }
+
 
                 }
                 getString(R.string.map) -> {
                     sharedPreference.edit()
                         .putString(Constants.LocationFrom, Constants.Loction_Enum.map.toString())
                         .commit()
-                    Navigation.findNavController(view).navigate(R.id.action_settingFragment_to_mapOrGpsFragment3)
+                    if(isInternetConnected(requireContext())){
+                        Navigation.findNavController(view).navigate(R.id.action_settingFragment_to_mapOrGpsFragment3)
+                    }else{
+                        Snackbar.make(rootView, getString(R.string.checkInternet), Snackbar.LENGTH_LONG).show()
+                    }
+
                 }
             }
         }
@@ -166,6 +163,7 @@ class SettingFragment : Fragment() {
         var lang = sharedPreference.getString(Constants.language, Constants.Language_Enum.en.toString())
         var units = sharedPreference.getString(Constants.unit,Constants.Units_Enum.metric.toString())
         var location = sharedPreference.getString(Constants.LocationFrom,Constants.Loction_Enum.gps.toString())
+        var windSpeed = sharedPreference.getString(Constants.windSpeed,Constants.WindSpeed_Enum.meter.toString())
         var notification = sharedPreference.getString(Constants.notification,Constants.notification_Enum.enable.toString())
 
         if (location == Constants.Loction_Enum.gps.toString()) {
@@ -198,6 +196,12 @@ class SettingFragment : Fragment() {
         }
         if (units == Constants.Units_Enum.standard.toString()) {
             binding.temperatureRadioGroup.check(binding.kelvinRadioButton.id)
+        }
+        if (windSpeed == Constants.WindSpeed_Enum.meter.toString()) {
+            binding.windSpeedRadioGroup.check(binding.meterRadioButton.id)
+        }
+        if (windSpeed == Constants.WindSpeed_Enum.mile.toString()) {
+            binding.windSpeedRadioGroup.check(binding.mileRadioButton.id)
         }
 
     }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class FavViewModel(private val repo: RepositoryInterface) : ViewModel() {
 
-    private var favMutableData = MutableStateFlow<FavState>(FavState.Loading)
+    private var favMutableData = MutableStateFlow<ResponseState<List<FavoriteLocation>>>(ResponseState.Loading)
     var favData = favMutableData
 
     init {
@@ -22,9 +22,9 @@ class FavViewModel(private val repo: RepositoryInterface) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             repo.getFavLocationsFromDB()
                 .catch {
-                        e -> favMutableData.value = FavState.Failure(e)
+                        e -> favMutableData.value = ResponseState.Failure(e)
                 }?.collectLatest {
-                        data -> favMutableData.value = FavState.Success(data)
+                        data -> favMutableData.value = ResponseState.Success(data)
                 }
         }
     }

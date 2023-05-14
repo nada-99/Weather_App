@@ -18,13 +18,12 @@ import com.airbnb.lottie.LottieDrawable
 import com.example.weatherapp.*
 import com.example.weatherapp.database.ConcreteLocalSource
 import com.example.weatherapp.databinding.FragmentHomeBinding
-import com.example.weatherapp.model.Repository
-import com.example.weatherapp.model.WeatherResponse
-import com.example.weatherapp.model.APIState
-import com.example.weatherapp.model.FavoriteLocation
+import com.example.weatherapp.model.*
 import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModel
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModelFactory
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.Language
 import java.math.RoundingMode
@@ -46,6 +45,7 @@ class HomeFragment : Fragment() {
     lateinit var languageFromSP : String
     lateinit var tempUnit : String
     lateinit var windUnit :String
+    lateinit var locationSharedPreference:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,12 +61,23 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val rootView = requireActivity().findViewById<View>(android.R.id.content)
 
         sharedPreference =
             requireActivity().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
         languageFromSP = sharedPreference.getString(Constants.language, "")!!
+        locationSharedPreference = sharedPreference.getString(Constants.LocationFrom,"")!!
         tempUnit = sharedPreference.getString(Constants.unit , "")!!
         windUnit = sharedPreference.getString(Constants.windSpeed , "")!!
+
+        myFactory = HomeViewModelFactory(
+            Repository.getInstance(
+                WeatherClient.getInstance(),
+                ConcreteLocalSource(requireContext()),
+                requireContext()
+            )
+        )
+        viewModel = ViewModelProvider(this, myFactory).get(HomeViewModel::class.java)
 
         val favNavigationArgs : HomeFragmentArgs by navArgs()
 
@@ -75,9 +86,15 @@ class HomeFragment : Fragment() {
             long = favNavigationArgs.favLong?.toDoubleOrNull()
             Log.i("Arrrrrgs", "$lat + $long")
         }else{
-            lat = sharedPreference.getString(Constants.lat, "")?.toDoubleOrNull()
-            long = sharedPreference.getString(Constants.long, "")?.toDoubleOrNull()
-            Log.i("GPPPPPPS", "$lat , $long")
+            if(locationSharedPreference == Constants.Loction_Enum.gps.toString()){
+                lat = sharedPreference.getString(Constants.lat, "")?.toDoubleOrNull()
+                long = sharedPreference.getString(Constants.long, "")?.toDoubleOrNull()
+                Log.i("GPPPPPPS", "$lat , $long")
+            }else{
+                lat = sharedPreference.getString(Constants.latMap, "")?.toDoubleOrNull()
+                long = sharedPreference.getString(Constants.longMap, "")?.toDoubleOrNull()
+                Log.i("Mappppppppp", "$lat , $long")
+            }
         }
 
         //Hourly Adapter
@@ -91,64 +108,68 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
         binding.dailyRecyclerView.layoutManager = layoutManagerDaily
 
-        myFactory = HomeViewModelFactory(
-            Repository.getInstance(
-                WeatherClient.getInstance(),
-                ConcreteLocalSource(requireContext()),
-                requireContext()
-            )
-        )
-        viewModel = ViewModelProvider(this, myFactory).get(HomeViewModel::class.java)
-
 
         if (isInternetConnected(requireContext())) {
+            Log.i("inttttttttternett", "hiiiiiiii")
             //call Api
-            //getLastLocation()
-        } else {
+           if (lat != null && long != null) {
+               viewModel.getWeatherData(lat!!,long!!)
+               lifecycleScope.launch {
+                   viewModel.weatherData.collectLatest { result ->
+                       when (result) {
+                           is ResponseState.Loading -> {
+                               Log.i("LOADING", "LOADING: ")
+                               binding.progressBar.visibility = View.VISIBLE
+                           }
+                           is ResponseState.Success -> {
+                               binding.progressBar.visibility = View.GONE
+                               result.data.address = getAddressGeoCoder(lat,long,requireContext(),languageFromSP)
+                               viewModel.insertCurrentWeatherToDB(result.data)
+                               fitWeatherDataToUi(result.data)
+                               Log.i("DATAAAAInternet", "${result.data.address}")
+                           }
+                           else -> {
+                               binding.progressBar.visibility = View.GONE
+                               Log.i("ERRRRORR", "ERRRRORR: ")
+                           }
+                       }
+                   }
+               }
+           }
+
+        }
+        else {
+            Log.i("DataBassse", "hiiiiiiii")
             //call DataBase
-            //viewModel.getCurrentWeather()
-            Toast.makeText(context, "Please Check your internet connection", Toast.LENGTH_SHORT)
-                .show()
+            viewModel.getCurrentWeather()
+            Snackbar.make(rootView, getString(R.string.checkInternet), Snackbar.LENGTH_LONG).show()
 
-//            Snackbar.make(
-//                view,
-//                "Please Check your internet connection",
-//                Snackbar.LENGTH_LONG
-//            ).show()
-        }
-
-        Log.i("LLLat", "$lat + $long")
-
-        if (lat != null && long != null) {
-            viewModel.getWeatherData(lat!!, long!!)
-        }
-
-        lifecycleScope.launch {
-            viewModel.weatherData.collect { result ->
-                when (result) {
-                    is APIState.Loading -> {
-                        Log.i("LOADING", "LOADING: ")
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
-                    is APIState.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        fitWeatherDataToUi(result.data)
-                        viewModel.deleteCurrentWeatherFromDB()
-                        viewModel.insertCurrentWeatherToDB(result.data)
-                        Log.i("DATAAAA", "${result.data.current.temp}")
-                    }
-                    else -> {
-                        binding.progressBar.visibility = View.GONE
-                        Log.i("ERRRRORR", "ERRRRORR: ")
+            lifecycleScope.launch {
+                viewModel.weatherData.collectLatest { result ->
+                    when (result) {
+                        is ResponseState.Loading -> {
+                            Log.i("LOADING", "LOADING: ")
+                            binding.progressBar.visibility = View.VISIBLE
+                        }
+                        is ResponseState.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            fitWeatherDataToUi(result.data)
+                            Log.i("DATAAAA", "${result.data.address}")
+                        }
+                        else -> {
+                            binding.progressBar.visibility = View.GONE
+                            Log.i("ERRRRORR", "ERRRRORR: ")
+                        }
                     }
                 }
             }
         }
+
     }
 
     fun fitWeatherDataToUi(weatherDetails: WeatherResponse) {
         //first part
-        binding.cityTv.text = getAddressGeoCoder(lat,long,requireContext(),languageFromSP)
+        binding.cityTv.text = weatherDetails.address
         binding.dateTv.text = getFormattedDate(weatherDetails.current.dt,languageFromSP)
         if(languageFromSP == "ar"){
             binding.tempTv.text = "${convertToArabicNumber(weatherDetails.current.temp.toInt())} ${getUnit(tempUnit,languageFromSP)}"
@@ -156,7 +177,7 @@ class HomeFragment : Fragment() {
             binding.pressureTv.text = convertToArabicNumber(weatherDetails.current.pressure)
             binding.humidityTv.text = convertToArabicNumber(weatherDetails.current.humidity) +"%"
 //            binding.windTv.text = convertToArabicNumber((getWindSpeed(windUnit , tempUnit ,weatherDetails.current.windSpeed,requireContext())).toInt())
-            binding.windTv.text = convertToArabicNumber(weatherDetails.current.windSpeed.toInt()) + getCurrentSpeed(requireContext())
+            binding.windTv.text = convertToArabicNumber(weatherDetails.current.windSpeed.toBigDecimal().setScale(2, RoundingMode.UP).toInt())+ getWindSpeed(windUnit,requireContext())
             binding.cloudTv.text = convertToArabicNumber(weatherDetails.current.clouds)+"%"
             binding.ultravioletTv.text = convertToArabicNumber(weatherDetails.current.uvi.toInt())
             binding.visibilityTv.text = convertToArabicNumber(weatherDetails.current.visibility)+ getString(R.string.m)
@@ -165,8 +186,8 @@ class HomeFragment : Fragment() {
             //last part
             binding.pressureTv.text = weatherDetails.current.pressure.toString()
             binding.humidityTv.text = weatherDetails.current.humidity.toString() +"%"
-//            binding.windTv.text = getWindSpeed(windUnit , tempUnit ,weatherDetails.current.windSpeed,requireContext())
-            binding.windTv.text = weatherDetails.current.windSpeed.toBigDecimal().setScale(2, RoundingMode.UP).toString()+ getCurrentSpeed(requireContext())
+            //binding.windTv.text = getWindSpeed(windUnit , tempUnit ,weatherDetails.current.windSpeed,requireContext())
+            binding.windTv.text = weatherDetails.current.windSpeed.toBigDecimal().setScale(2, RoundingMode.UP).toString()+ getWindSpeed(windUnit,requireContext())
             binding.cloudTv.text = weatherDetails.current.clouds.toString()+"%"
             binding.ultravioletTv.text = weatherDetails.current.uvi.toString()
             binding.visibilityTv.text = weatherDetails.current.visibility.toString()+ getString(R.string.m)

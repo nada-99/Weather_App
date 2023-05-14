@@ -21,31 +21,25 @@ import com.example.weatherapp.isInternetConnected
 import com.example.weatherapp.model.FavState
 import com.example.weatherapp.model.FavoriteLocation
 import com.example.weatherapp.model.Repository
+import com.example.weatherapp.model.ResponseState
 import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.favorite.viewmodel.FavViewModel
 import com.example.weatherapp.ui.favorite.viewmodel.FavViewModelFactory
 import com.example.weatherapp.ui.home.view.DailyAdapter
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class FavoriteFragment : Fragment() , OnClickFavorite{
+class FavoriteFragment : Fragment(), OnClickFavorite {
 
-    lateinit var binding:FragmentFavoriteBinding
+    lateinit var binding: FragmentFavoriteBinding
     lateinit var myFactory: FavViewModelFactory
     lateinit var viewModel: FavViewModel
     lateinit var favAdapter: FavAdapter
+    lateinit var rootView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-    }
-    override fun onStop() {
-        super.onStop()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
     override fun onCreateView(
@@ -59,8 +53,9 @@ class FavoriteFragment : Fragment() , OnClickFavorite{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        rootView = requireActivity().findViewById<View>(android.R.id.content)
 
-        favAdapter = FavAdapter(ArrayList(),this, requireActivity())
+        favAdapter = FavAdapter(ArrayList(), this, requireActivity())
         val layoutManager =
             LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
         binding.favRecyclerview.layoutManager = layoutManager
@@ -77,16 +72,23 @@ class FavoriteFragment : Fragment() , OnClickFavorite{
         lifecycleScope.launch {
             viewModel.favData.collectLatest { result ->
                 when (result) {
-                    is FavState.Loading -> {
+                    is ResponseState.Loading -> {
                         Log.i("LOADING", "LOADING: ")
                     }
-                    is FavState.Success -> {
-                        binding.favIconIv.visibility = View.GONE
-                        binding.addPlacesTv.visibility = View.GONE
-                        favAdapter.setListFav(result.data)
-                        favAdapter.notifyDataSetChanged()
-                        binding.favRecyclerview.adapter = favAdapter
-                        Log.i("LOADINGFavv", "LOADING: ${result.data} ")
+                    is ResponseState.Success -> {
+                        if(result.data.isNullOrEmpty()){
+                            binding.favIconIv.visibility = View.VISIBLE
+                            binding.addPlacesTv.visibility = View.VISIBLE
+                            binding.favRecyclerview.visibility = View.GONE
+                        }else{
+                            binding.favRecyclerview.visibility = View.VISIBLE
+                            binding.favIconIv.visibility = View.GONE
+                            binding.addPlacesTv.visibility = View.GONE
+                            favAdapter.setListFav(result.data)
+                            favAdapter.notifyDataSetChanged()
+                            binding.favRecyclerview.adapter = favAdapter
+                            Log.i("LOADINGFavv", "LOADING: ${result.data} ")
+                        }
                     }
                     else -> {
                         Log.i("ERRRRORR", "ERRRRORR: ")
@@ -94,28 +96,31 @@ class FavoriteFragment : Fragment() , OnClickFavorite{
                 }
             }
         }
-
-        binding.backFav.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.action_favoriteFragment_to_homeFragment)
-        }
         binding.favFab.setOnClickListener {
-            if(isInternetConnected(requireContext())){
-                Navigation.findNavController(view).navigate(R.id.action_favoriteFragment_to_mapFragment)
-            }else{
-                Toast.makeText(requireContext(), "Check your internet", Toast.LENGTH_LONG).show()
+            if (isInternetConnected(requireContext())) {
+                Navigation.findNavController(view)
+                    .navigate(R.id.action_favoriteFragment_to_mapFragment)
+            } else {
+                Snackbar.make(rootView, getString(R.string.checkInternet), Snackbar.LENGTH_LONG)
+                    .show()
             }
         }
     }
 
     override fun onClick(favoriteLocation: FavoriteLocation) {
-        Navigation.findNavController(requireView())
-            .navigate(FavoriteFragmentDirections.actionFavoriteFragmentToHomeFragment().apply {
-                favComing = true
-                favLat = favoriteLocation.latitude.toString()
-                favLong = favoriteLocation.longitude.toString()
-                Log.i("ArrrrrgsFavv", "$favLat + $favLong")
-                //favoriteArgs = favoriteLocation
-            })
+        if (isInternetConnected(requireContext())) {
+            Navigation.findNavController(requireView())
+                .navigate(FavoriteFragmentDirections.actionFavoriteFragmentToHomeFragment().apply {
+                    favComing = true
+                    favLat = favoriteLocation.latitude.toString()
+                    favLong = favoriteLocation.longitude.toString()
+                    Log.i("ArrrrrgsFavv", "$favLat + $favLong")
+                    //favoriteArgs = favoriteLocation
+                })
+        } else {
+            Snackbar.make(rootView, getString(R.string.checkInternet), Snackbar.LENGTH_LONG).show()
+        }
+
     }
 
     override fun onClickDelete(favoriteLocation: FavoriteLocation) {
@@ -127,7 +132,6 @@ class FavoriteFragment : Fragment() , OnClickFavorite{
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
-
     }
 
 }

@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.google.gson.Gson
 import java.io.Serializable
 
-@Entity(tableName = "weatherResponse",primaryKeys = ["isFav","lat","lon"])
+@Entity(tableName = "weatherResponse",primaryKeys = ["isFav"])
 @TypeConverters(WeatherTypeConverter::class)
 data class WeatherResponse(
     val lat: Double,
@@ -19,9 +19,10 @@ data class WeatherResponse(
     val hourly: List<Hourly>,
     val daily: List<Daily>,
     val alerts: List<Alert>,
-    val isFav:Int =0
+    val isFav:Int =0,
+    var address:String=""
 ) {
-    constructor() : this(0.0, 0.0, "", 0, Current(), listOf(), listOf(), listOf())
+    constructor() : this(0.0, 0.0, "", 0, Current(), listOf(), listOf(), listOf(),0,"")
 }
 data class Current(
     val dt: Long,

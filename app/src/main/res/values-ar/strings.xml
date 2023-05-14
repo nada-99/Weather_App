@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Weather App</string>
+    <string name="app_name">الطقس</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="favorites_header">المفضلة</string>
@@ -51,5 +51,9 @@
     <string name="endTimeAlert">تاريخ الانتهاء يجب ان يكون بعد تاريخ البدء</string>
     <string name="noAlerts">الطقس مستقر لا يوجد تنيهات اليوم</string>
     <string name="weatherAlerts">تنبيهات الطقس</string>
-    <string name="features">ميزه</string>
+    <string name="features">اذا كنت تريد عمل منبه للانذرات المناخيه يجب تفيل الاشعارات اولا</string>
+
+    <string name="checkInternet">تحقق من اتصالك بالانترنت</string>
+    <string name="weather_alert">تنبيه الطقص</string>
+    <string name="dismiss">اغلاق</string>
 </resources>
