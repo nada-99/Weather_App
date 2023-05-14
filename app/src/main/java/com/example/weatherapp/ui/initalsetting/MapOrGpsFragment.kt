@@ -29,7 +29,8 @@ class MapOrGpsFragment : Fragment() {
 
     lateinit var binding: FragmentMapOrGpsBinding
     lateinit var mapSharedPreferences: SharedPreferences
-    lateinit var geoCoder: Geocoder
+    var lat: Double? = null
+    var long: Double? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +59,6 @@ class MapOrGpsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         mapSharedPreferences = requireActivity().getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
-        geoCoder = Geocoder(requireContext(), Locale.getDefault())
 
         val supportMapFragment : SupportMapFragment = getChildFragmentManager().findFragmentById(R.id.map_fragment) as SupportMapFragment
         supportMapFragment.getMapAsync(object : OnMapReadyCallback {
@@ -70,43 +70,34 @@ class MapOrGpsFragment : Fragment() {
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it,5f))
                     googleMap.addMarker(marker)
 
-                    mapSharedPreferences.edit().putString(Constants.lat, it.latitude.toString()).apply()
-                    mapSharedPreferences.edit().putString(Constants.long, it.longitude.toString()).apply()
                     mapSharedPreferences.edit().putString(Constants.latMap, it.latitude.toString()).apply()
                     mapSharedPreferences.edit().putString(Constants.longMap, it.longitude.toString()).apply()
                     var language = mapSharedPreferences.getString(Constants.language,"")
 
+                    lat = it.latitude
+                    long = it.longitude
 
                     Log.i("Lat&Long Fav", "onMapClick: ${it.latitude} , ${it.longitude}")
-
-                    val addresses = getAddressGeoCoder(it.latitude,it.longitude,requireContext(),language!!)
-//                    val city = addresses!![0].locality
-
-//
-//                    if(addresses != null || addresses != "") {
-//                        Toast.makeText(requireContext(), "i can't found city", Toast.LENGTH_LONG)
-//                            .show()
-//                    }
-
-                    binding.addToFavBtn.setOnClickListener {
-                        if (addresses != null || addresses != "") {
-                            val intent = Intent(requireContext(), MainActivity::class.java)
-                            startActivity(intent)
-                        } else {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.notValidMap),
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-
-                    binding.cancelButton.setOnClickListener {
-                        getActivity()?.onBackPressed()
-                    }
                 }
             }
 
         } )
+
+        binding.addToFavBtn.setOnClickListener {
+            if (lat != null && long != null) {
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.notValidMap),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+        binding.cancelButton.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
     }
 }

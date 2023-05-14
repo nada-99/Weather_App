@@ -12,6 +12,8 @@ import kotlinx.coroutines.launch
 class AlertViewModel (private val repo: RepositoryInterface) : ViewModel(){
     private var alertMutableData = MutableStateFlow<ResponseState<List<MyAlert>>>(ResponseState.Loading)
     var alertData = alertMutableData
+    private var weatherMutableData = MutableStateFlow<ResponseState<WeatherResponse>>(ResponseState.Loading)
+    var weatherData = weatherMutableData
 
     init {
         getAllAlerts()
@@ -37,6 +39,18 @@ class AlertViewModel (private val repo: RepositoryInterface) : ViewModel(){
     fun deleteAlertFromDB(myAlert: MyAlert){
         viewModelScope.launch(Dispatchers.IO) {
             repo.deleteAlertFromDB(myAlert)
+        }
+    }
+
+    //get current weather from database
+    fun getCurrentWeather(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.getCurrentWeatherFromDB()
+                .catch {
+                        e -> weatherMutableData.value = ResponseState.Failure(e)
+                }?.collectLatest {
+                        data -> weatherMutableData.value = ResponseState.Success(data)
+                }
         }
     }
 }

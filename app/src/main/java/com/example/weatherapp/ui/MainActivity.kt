@@ -6,22 +6,23 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.Navigation.findNavController
@@ -31,7 +32,6 @@ import com.example.weatherapp.R
 import com.example.weatherapp.database.ConcreteLocalSource
 import com.example.weatherapp.isInternetConnected
 import com.example.weatherapp.model.Repository
-import com.example.weatherapp.model.ResponseState
 import com.example.weatherapp.network.WeatherClient
 import com.example.weatherapp.ui.home.view.PERMISSION_ID
 import com.example.weatherapp.ui.home.viewmodel.HomeViewModel
@@ -41,11 +41,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
@@ -59,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var sharedPreference: SharedPreferences
     lateinit var myFactory: HomeViewModelFactory
     lateinit var viewModel: HomeViewModel
-    lateinit var locationSharedPreference:String
+    lateinit var locationSharedPreference: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
         sharedPreference =
             applicationContext.getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
-        locationSharedPreference = sharedPreference.getString(Constants.LocationFrom,"")!!
+        locationSharedPreference = sharedPreference.getString(Constants.LocationFrom, "")!!
 
         //GPs
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -81,11 +76,9 @@ class MainActivity : AppCompatActivity() {
         )
         viewModel = ViewModelProvider(this, myFactory).get(HomeViewModel::class.java)
 
-        if(isInternetConnected(this) && locationSharedPreference == Constants.Loction_Enum.gps.toString()){
+        if (isInternetConnected(this) && locationSharedPreference == Constants.Loction_Enum.gps.toString()) {
             getLastLocation()
-//            GlobalScope.launch(Dispatchers.Main) {
-//                getLastLocation()
-//            }
+
         }
         //setup navigation drawer
         getSupportActionBar()?.setElevation(0F)
@@ -102,129 +95,168 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(this, R.id.nav_host_fragment)
         setupWithNavController(navigationView, navController)
 
-    }
+        navController.addOnDestinationChangedListener { controller: NavController?, destination: NavDestination, arguments: Bundle? ->
+            if (destination.id == R.id.favoriteFragment) {
+                actionBar?.setDisplayShowCustomEnabled(true)
+                actionBar?.setDisplayShowTitleEnabled(false)
+                actionBar!!.setDisplayShowHomeEnabled(false)
+                actionBar.setDisplayHomeAsUpEnabled(false)
+                val inflater = LayoutInflater.from(this)
+                val customView = inflater.inflate(R.layout.custom_actionbar_header, null)
+                val titleTextView = customView.findViewById<TextView>(R.id.header_tv)
+                titleTextView.text = getString(R.string.favorites_header)
+                actionBar?.customView = customView
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                drawerLayout.closeDrawer(GravityCompat.START)
+                // Add back button listener
+                val backButton = customView.findViewById<ImageView>(R.id.back_icon)
+                backButton.setOnClickListener {
+                    this?.onBackPressed()
+                }
+
+            } else if (destination.id == R.id.alertsFragment) {
+                actionBar?.setDisplayShowCustomEnabled(true)
+                actionBar?.setDisplayShowTitleEnabled(false)
+                actionBar!!.setDisplayShowHomeEnabled(false)
+                actionBar.setDisplayHomeAsUpEnabled(false)
+                val inflater = LayoutInflater.from(this)
+                val customView = inflater.inflate(R.layout.custom_actionbar_header, null)
+                val titleTextView = customView.findViewById<TextView>(R.id.header_tv)
+                titleTextView.text = getString(R.string.alerts_header)
+                actionBar?.customView = customView
+
+                // Add back button listener
+                val backButton = customView.findViewById<ImageView>(R.id.back_icon)
+                backButton.setOnClickListener {
+                    this?.onBackPressed()
+                }
+            }else if (destination.id == R.id.settingFragment) {
+                actionBar?.setDisplayShowCustomEnabled(true)
+                actionBar?.setDisplayShowTitleEnabled(false)
+                actionBar!!.setDisplayShowHomeEnabled(false)
+                actionBar.setDisplayHomeAsUpEnabled(false)
+                val inflater = LayoutInflater.from(this)
+                val customView = inflater.inflate(R.layout.custom_actionbar_header, null)
+                val titleTextView = customView.findViewById<TextView>(R.id.header_tv)
+                titleTextView.text = getString(R.string.setting_header)
+                actionBar?.customView = customView
+
+                // Add back button listener
+                val backButton = customView.findViewById<ImageView>(R.id.back_icon)
+                backButton.setOnClickListener {
+                    this?.onBackPressed()
+                }
             } else {
-                drawerLayout.openDrawer(GravityCompat.START)
+                    actionBar?.setDisplayShowCustomEnabled(false)
+                    actionBar?.setHomeAsUpIndicator(R.drawable.menu_icon_24)
+                    actionBar!!.setDisplayShowHomeEnabled(true)
+                    actionBar.setDisplayHomeAsUpEnabled(true)
+                }
+
             }
         }
-        return super.onOptionsItemSelected(item)
-    }
 
-    override fun onResume() {
-        super.onResume()
-        if (checkPermissions())
-            if(isInternetConnected(this)&& locationSharedPreference == Constants.Loction_Enum.gps.toString()){
-                getLastLocation()
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            if (item.itemId == android.R.id.home) {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.START)
+                }
             }
-    }
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_ID) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLastLocation()
+            return super.onOptionsItemSelected(item)
+        }
+
+        override fun onResume() {
+            super.onResume()
+            if (checkPermissions())
+                if (isInternetConnected(this) && locationSharedPreference == Constants.Loction_Enum.gps.toString()) {
+                    getLastLocation()
+                }
+        }
+
+        override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
+        ) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            if (requestCode == PERMISSION_ID) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLastLocation()
+                }
             }
         }
-    }
 
-    @SuppressLint("MissingPermission")
-    private fun getLastLocation() {
-        if (checkPermissions()) {
-            if (isLocationEnable()) {
-                requestNewLocationData()
+        @SuppressLint("MissingPermission")
+        private fun getLastLocation() {
+            if (checkPermissions()) {
+                if (isLocationEnable()) {
+                    requestNewLocationData()
+                } else {
+                    Toast.makeText(this, "Turn on Location", Toast.LENGTH_LONG).show()
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startActivity(intent)
+                }
+
             } else {
-                Toast.makeText(this, "Turn on Location", Toast.LENGTH_LONG).show()
-                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                startActivity(intent)
+                requestPermissions()
             }
-
-        } else {
-            requestPermissions()
         }
-    }
-    private fun checkPermissions(): Boolean {
-        val result = ActivityCompat.checkSelfPermission(
-            this, android.Manifest.permission.ACCESS_COARSE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-            this, android.Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
 
-        return result
-    }
+        private fun checkPermissions(): Boolean {
+            val result = ActivityCompat.checkSelfPermission(
+                this, android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                this, android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
 
-    private fun requestPermissions() {
-        ActivityCompat.requestPermissions(
-            this, arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ), PERMISSION_ID
-        )
-    }
+            return result
+        }
 
-    private fun isLocationEnable(): Boolean {
-        val locationManager: LocationManager =
-            this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-    }
+        private fun requestPermissions() {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ), PERMISSION_ID
+            )
+        }
 
-    @SuppressLint("MissingPermission")
-    private fun requestNewLocationData() {
-        val mLocationRequest = com.google.android.gms.location.LocationRequest()
-        mLocationRequest.setPriority(com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY)
-        mLocationRequest.setInterval(0)
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        mFusedLocationClient.requestLocationUpdates(
-            mLocationRequest, mLocationCallback,
-            Looper.myLooper()
-        )
-    }
+        private fun isLocationEnable(): Boolean {
+            val locationManager: LocationManager =
+                this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                    locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        }
 
-    private val mLocationCallback: LocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            val mLastLocation: Location? = locationResult.lastLocation
+        @SuppressLint("MissingPermission")
+        private fun requestNewLocationData() {
+            val mLocationRequest = com.google.android.gms.location.LocationRequest()
+            mLocationRequest.setPriority(com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY)
+            mLocationRequest.setInterval(0)
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            mFusedLocationClient.requestLocationUpdates(
+                mLocationRequest, mLocationCallback,
+                Looper.myLooper()
+            )
+        }
 
-            if (mLastLocation != null) {
-                lat = mLastLocation.latitude
-                long = mLastLocation.longitude
-                Log.i("Lat & Long", "Lat & Long : $lat, $long")
+        private val mLocationCallback: LocationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                val mLastLocation: Location? = locationResult.lastLocation
 
-                sharedPreference.edit().putString(Constants.lat, lat.toString()).apply()
-                sharedPreference.edit().putString(Constants.long, long.toString()).apply()
+                if (mLastLocation != null) {
+                    lat = mLastLocation.latitude
+                    long = mLastLocation.longitude
+                    Log.i("Lat & Long", "Lat & Long : $lat, $long")
 
-/*                lifecycleScope.launch {
                     sharedPreference.edit().putString(Constants.lat, lat.toString()).apply()
                     sharedPreference.edit().putString(Constants.long, long.toString()).apply()
-//                    sharedPreference.edit().putString(Constants.address, address).apply()
-                    viewModel.weatherData.collectLatest { result ->
-                        when (result) {
-                            is ResponseState.Loading -> {
-                                Log.i("LOADING", "LOADING: ")
-                            }
-                            is ResponseState.Success -> {
-                                viewModel.deleteCurrentWeatherFromDB()
-                                viewModel.insertCurrentWeatherToDB(result.data)
-                                Log.i("DATAAAA", "${result.data.current.temp}")
-                            }
-                            else -> {
-                                Log.i("ERRRRORR", "ERRRRORR: ")
-                            }
-                        }
-                    }
-                }*/
 
+                }
+
+                mFusedLocationClient.removeLocationUpdates(this)
             }
-
-            mFusedLocationClient.removeLocationUpdates(this)
         }
-    }
 
-}
+    }

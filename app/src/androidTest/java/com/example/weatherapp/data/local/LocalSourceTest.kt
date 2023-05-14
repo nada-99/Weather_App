@@ -5,6 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.MediumTest
 import com.example.weatherapp.RoomMainRule
 import com.example.weatherapp.database.ConcreteLocalSource
 import com.example.weatherapp.database.LocalSource
@@ -32,6 +33,7 @@ import org.junit.runner.RunWith
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
+@MediumTest
 class LocalSourceTest {
     lateinit var database : WeatherDataBase
     lateinit var localSource: ConcreteLocalSource

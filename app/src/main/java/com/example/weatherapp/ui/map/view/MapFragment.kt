@@ -36,11 +36,11 @@ class MapFragment : Fragment() {
 
     lateinit var binding: FragmentMapBinding
     lateinit var mapSharedPreferences: SharedPreferences
-    lateinit var geoCoder: Geocoder
-    lateinit var address: String
     lateinit var myFactory: MapViewModelFactory
     lateinit var viewModel: MapViewModel
     lateinit var favoriteLocation: FavoriteLocation
+    var lat: Double? = null
+    var long: Double? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +72,6 @@ class MapFragment : Fragment() {
         favoriteLocation = FavoriteLocation()
         mapSharedPreferences =
             requireActivity().getSharedPreferences(Constants.SP_Fav, Context.MODE_PRIVATE)
-        geoCoder = Geocoder(requireContext(), Locale.getDefault())
 
         myFactory = MapViewModelFactory(
             Repository.getInstance(
@@ -94,6 +93,8 @@ class MapFragment : Fragment() {
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 5f))
                     googleMap.addMarker(marker)
 
+                    lat = it.latitude
+                    long = it.longitude
                     favoriteLocation.latitude = it.latitude
                     favoriteLocation.longitude = it.longitude
 
@@ -107,29 +108,27 @@ class MapFragment : Fragment() {
                     favoriteLocation.address_ar =
                         getAddressGeoCoder(it.latitude, it.longitude, requireContext(), "ar")
 
-
-                    binding.addToFavBtn.setOnClickListener {
-                        if (favoriteLocation.address_en != "" || favoriteLocation.address_ar != "") {
-                            //Navigation.findNavController(view).navigate(R.id.action_mapFragment_to_favoriteFragment)
-                            viewModel.insertFavLocationToDB(favoriteLocation)
-                            Navigation.findNavController(requireView()).navigateUp()
-                        } else {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.notValidMap),
-                                Toast.LENGTH_LONG
-                            )
-                                .show()
-                        }
-                    }
-
-                    binding.cancelButton.setOnClickListener {
-                        getActivity()?.onBackPressed()
-                    }
                 }
             }
 
         })
+
+        binding.addToFavBtn.setOnClickListener {
+            if (lat == null && long == null) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.notValidMap),
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                viewModel.insertFavLocationToDB(favoriteLocation)
+                Navigation.findNavController(requireView()).navigateUp()
+            }
+        }
+
+        binding.cancelButton.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
     }
 

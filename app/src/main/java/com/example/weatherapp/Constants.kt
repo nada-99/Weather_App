@@ -27,6 +27,7 @@ object Constants {
     const val notification = "notification"
     const val latMap = "latMap"
     const val longMap = "longMap"
+    const val addressCountry = "address"
 
     enum class Loction_Enum() { map, gps }
     enum class Language_Enum() { en, ar }
@@ -164,9 +165,8 @@ fun getUnit(unit:String,language: String):String{
     return result
 }
 
-fun getCurrentSpeed(context: Context): String {
-    val sharedPreference =  context.getSharedPreferences(Constants.SP_Key, Context.MODE_PRIVATE)
-    return when (  sharedPreference.getString(Constants.unit,Constants.Units_Enum.standard.toString())) {
+fun getCurrentSpeed(unit:String , context: Context): String {
+    return when (unit) {
         Constants.Units_Enum.metric.toString() -> {
             context.getString(R.string.meter_sec)
         }
@@ -182,6 +182,18 @@ fun getCurrentSpeed(context: Context): String {
     }
 }
 
+fun getWindSpeed(unit:String, context: Context):String{
+    return when(unit){
+        Constants.WindSpeed_Enum.meter.toString() -> {
+            context.getString(R.string.meter_sec)
+        }else ->{
+            context.getString(R.string.mile_hour)
+        }
+
+    }
+}
+
+/*
 fun getWindSpeed(windSpeedUnit:String , unit:String , windSpeed:Double , context: Context):String{
     var result = ""
     if(windSpeedUnit == Constants.WindSpeed_Enum.meter.toString() && unit == Constants.Units_Enum.imperial.toString()){
@@ -189,7 +201,7 @@ fun getWindSpeed(windSpeedUnit:String , unit:String , windSpeed:Double , context
     }else if(windSpeedUnit == Constants.WindSpeed_Enum.mile.toString() && (unit == Constants.Units_Enum.metric.toString() || unit == Constants.Units_Enum.standard.toString())){
         result = (2.23694*(windSpeed).toInt()).toString()+ context.getString(R.string.mile_hour)
     }else{
-        result = windSpeed.toInt().toString() + getCurrentSpeed(context)
+        result = windSpeed.toInt().toString() + getCurrentSpeed(unit,context)
     }
     return result
-}
+}*/

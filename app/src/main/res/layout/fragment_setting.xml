@@ -18,7 +18,6 @@
         android:gravity="center"
         android:padding="8dp"
         android:text="@string/notifications"
-        android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/temp_setting_tv"
         app:layout_constraintHorizontal_bias="0.0"
@@ -37,7 +36,6 @@
         android:gravity="center"
         android:padding="8dp"
         android:text="@string/wind_speed"
-        android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -56,7 +54,6 @@
         android:gravity="center"
         android:padding="8dp"
         android:text="@string/temperature"
-        android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/wind_tv"
         app:layout_constraintHorizontal_bias="0.5"
@@ -64,45 +61,22 @@
         app:layout_constraintTop_toBottomOf="@+id/location_radioGroup" />
 
     <TextView
-        android:id="@+id/setting_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/capriola"
-        android:text="@string/setting_header"
-        android:textColor="@color/white"
-        android:textSize="28sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/back_setting"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/back_icon_24"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/setting_tv" />
-
-    <TextView
         android:id="@+id/location_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/radius_radio_group"
         android:elevation="10dp"
         android:fontFamily="@font/capriola"
         android:gravity="center"
         android:padding="8dp"
         android:text="@string/location_setting"
-        android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/language_tv"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/setting_tv" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/language_tv"
@@ -115,7 +89,6 @@
         android:gravity="center"
         android:padding="8dp"
         android:text="@string/language_setting"
-        android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -143,7 +116,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/gps"
-            android:textColor="@color/white" />
+            android:textColor="#515251" />
 
         <RadioButton
             android:id="@+id/map_radio_button"
@@ -154,7 +127,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/map"
-            android:textColor="@color/white" />
+            android:textColor="#515251" />
     </RadioGroup>
 
     <RadioGroup
@@ -178,7 +151,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/english"
-            android:textColor="@color/white" />
+            android:textColor="#515251" />
 
         <RadioButton
             android:id="@+id/arSub_radio_button"
@@ -189,7 +162,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/arabic"
-            android:textColor="@color/white" />
+            android:textColor="#515251" />
 
     </RadioGroup>
 
@@ -214,7 +187,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/celsius"
-            android:textColor="@color/white"/>
+            android:textColor="#515251"/>
 
         <RadioButton
             android:id="@+id/kelvin_radio_button"
@@ -224,7 +197,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/kelvin"
-            android:textColor="@color/white" />
+            android:textColor="#515251"/>
 
         <RadioButton
             android:id="@+id/fahrenheit_radio_button"
@@ -235,7 +208,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/fahrenheit"
-            android:textColor="@color/white" />
+            android:textColor="#515251"/>
     </RadioGroup>
 
     <RadioGroup
@@ -259,7 +232,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/meter_sec"
-            android:textColor="@color/white"/>
+            android:textColor="#515251"/>
 
         <RadioButton
             android:id="@+id/mile_radio_button"
@@ -270,7 +243,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/mile_hour"
-            android:textColor="@color/white" />
+            android:textColor="#515251" />
     </RadioGroup>
 
     <RadioGroup
@@ -294,7 +267,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/enable"
-            android:textColor="@color/white" />
+            android:textColor="#515251" />
 
         <RadioButton
             android:id="@+id/disable_radio_button"
@@ -305,7 +278,7 @@
             android:buttonTint="@color/white"
             android:fontFamily="@font/capriola"
             android:text="@string/disable"
-            android:textColor="@color/white"/>
+            android:textColor="#515251"/>
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

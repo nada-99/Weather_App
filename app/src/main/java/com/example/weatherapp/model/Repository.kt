@@ -7,7 +7,7 @@ import com.example.weatherapp.network.RemoteSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class Repository private constructor(
+class Repository(
     var remoteSource: RemoteSource, var localSource: LocalSource , var context: Context) : RepositoryInterface {
 
     companion object{

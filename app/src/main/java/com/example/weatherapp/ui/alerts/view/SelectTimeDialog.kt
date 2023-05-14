@@ -108,7 +108,7 @@ class SelectTimeDialog : DialogFragment() {
         binding.saveButton.setOnClickListener {
             if(myAlert.endTime >= myAlert.startTime){
                 viewModel.insertAlertToDB(myAlert)
-                setWorker(myAlert)
+                setWorkerForNotification(myAlert)
                 dialog!!.dismiss()
             }else{
                 Toast.makeText(
@@ -188,7 +188,7 @@ class SelectTimeDialog : DialogFragment() {
             datePickerDialog.show()
         }
     }
-    fun setWorker(myAlert:MyAlert) {
+    fun setWorkerForNotification(myAlert:MyAlert) {
         val calendar = Calendar.getInstance()
         val currentTime = calendar.timeInMillis
         val targetTime = myAlert.dateOfNotification
@@ -199,11 +199,11 @@ class SelectTimeDialog : DialogFragment() {
         data.putString("alert", StringAlert)
         val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(1,TimeUnit.DAYS)
             .setInitialDelay(initialDelay,  TimeUnit.MILLISECONDS)
-//            .addTag(myAlert.startTime.toString()+myAlert.endTime.toString())
+            .addTag(myAlert.startTime.toString()+myAlert.endTime.toString())
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
             .setInputData(data.build())
             .build()
         WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
-            "notification",ExistingPeriodicWorkPolicy.REPLACE,workRequest)
+            myAlert.startTime.toString()+myAlert.endTime.toString(),ExistingPeriodicWorkPolicy.REPLACE,workRequest)
     }
 }
